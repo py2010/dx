@@ -1,0 +1,147 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}容器编排修改{% endblock %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static 'plugins/datatimepicker/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock header %}
+
+
+{% block left %}
+    {% include "base/_left.html" with cmdb_docker_compose_active="active" %}
+{% endblock left %}
+
+
+
+{% block page-content %}
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>资产管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                <li>
+                    <a href="{% url 'dock:docker_compose_list' %}">容器编排列表</a>
+                </li>
+                <li class="active">
+                    <strong>Docker-Compose 编排容器</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>信息浏览</h5>
+                </div>
+                <div class="ibox-content">
+                    {# {{ form.as_table }} #}
+                    <form class="form-horizontal" class="form-horizontal" action=""
+                        method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" style="margin: 20px auto 0px">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if object %}
+                        {% bootstrap_field form.name layout="horizontal" %}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="id_yml">容器YML</label>
+                            <div class="col-md-9">
+                                <select name="yml" title="" required="" class="form-control" id="id_yml" readonly="">
+                                    <option value="{{ object.yml.id }}">{{ object.yml }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="id_yml">宿主机</label>
+                            <div class="col-md-9">
+                                <select name="dockerhost" title="" required="" class="form-control" id="id_dockerhost" readonly="">
+                                    <option value="{{ object.dockerhost.id }}">{{ object.dockerhost }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {% bootstrap_field form.scale layout="horizontal" %}
+                        {% bootstrap_field form.text layout="horizontal" %}
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">&nbsp;</label>
+                            <div class="col-md-9">
+
+                                <div class="checkbox">
+                                    <label for="id_up">
+                                        <input type="checkbox" name="up" class="" id="id_up"> 执行docker-compose up更新
+                                    </label>
+                                </div>
+                                <div class="help-block">注意如果容器原已停止，更新后会重新启动</div>
+
+                                <div class="hr-line-dashed"></div>
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-white" type="reset">重置</button>
+
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field form.name layout="horizontal" %}
+                        {% bootstrap_field form.yml layout="horizontal" %}
+                        {% bootstrap_field form.dockerhost layout="horizontal" %}
+
+                        {% bootstrap_field form.scale layout="horizontal" %}
+                        {% bootstrap_field form.text layout="horizontal" %}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">&nbsp;</label>
+                            <div class="col-md-9">
+
+                                <div class="checkbox">
+                                    <label for="id_up">
+                                        <input type="checkbox" name="up" checked="" class="" id="id_up"> 创建并运行容器组
+                                    </label>
+                                </div>
+                                <div class="help-block">执行docker-compose up命令</div>
+
+                                <div class="hr-line-dashed"></div>
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-white" type="reset">重置</button>
+
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block footer-js %}
+
+    <script type="text/javascript">
+
+    </script>
+{% endblock footer-js %}
+
+
+
+
+

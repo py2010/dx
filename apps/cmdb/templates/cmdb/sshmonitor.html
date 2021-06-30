@@ -1,0 +1,54 @@
+<html>
+<head>
+    <style>
+      body { background-color: #666; font-size: 8px;}
+    </style>
+{% load staticfiles %}
+
+<!--termianl css-->
+<link rel="stylesheet" href="{% static 'xterm/xterm.css' %}"/>
+</head>
+<body>
+    <div id="terminal_monitor"> </div>
+</body>
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'xterm/xterm.js' %}"></script>
+<script src="{% static 'xterm/addons/fit/fit.js' %}"></script>
+<script src="{% static 'xterm/addons/terminado/terminado.js' %}"></script>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var ws_path = ws_scheme + '://' + window.location.host + '/monitor/' + '{{ logid }}';
+        make_terminal(document.getElementById('terminal_monitor'), {rows: 50, cols: 90}, ws_path);
+    });
+    function make_terminal(element, size, ws_url) {
+        var term = new Terminal({
+            cols: size.cols,
+            rows: size.rows,
+            screenKeys: true,
+            useStyle: true,
+            cursorBlink: true,  // Blink the terminal's cursor
+        });
+        term.open(element, false);
+        var ws = new WebSocket(ws_url);
+        ws.onopen = function (event) {
+            term.resize(term.cols, term.rows);
+
+            ws.onmessage = function (event) {
+                json_msg = JSON.parse(event.data);
+                switch (json_msg[0]) {
+                    case "stdout":
+                        term.write(json_msg[1]);
+                        break;
+                    case "disconnect":
+                        term.write("\r\n\r\n[Finished...]\r\n");
+                        break;
+                }
+            };
+        };
+        return {socket: ws, term: term};
+    }
+</script>
+</html>

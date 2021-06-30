@@ -1,0 +1,12 @@
+.svn
+.git
+*.pyc
+*.log
+nohup.out
+# apps/*/migrations/0*.py
+# migrations
+#settings.py
+static/bak
+static/t
+__pycache__
+

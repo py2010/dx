@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guacamole connection</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/sweetalert/sweetalert2.min.css' %}">
+    <style>
+        body {
+            padding:0;  /*去除内边距*/
+            border:0;   /*去除边框*/
+            margin:0;   /*去除外边距*/
+        }
+    </style>
+</head>
+<body>
+
+<!--<h1>Guacamole Remote Desktop</h1>-->
+<!-- Guacamole -->
+<script type="text/javascript" src="{% static 'plugins/guacamole/1.2.0/guacamole-common.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+
+<!-- Display -->
+<div id="display">
+</div>
+<!-- Init -->
+<script type="text/javascript">
+
+    // Get display div from document
+    var display = document.getElementById("display");
+
+    // Instantiate client, using an HTTP tunnel for communications.
+    //http://guacamole.apache.org/doc/guacamole-common-js/Guacamole.WebSocketTunnel.html
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var ws_path = ws_scheme + '://' + window.location.host + '/guacamole/monitor/{{ object.pk }}/';
+
+    console.log(ws_path);
+    var tunnel = new Guacamole.WebSocketTunnel(ws_path);
+    // console.log(tunnel, 22222222);
+    var guac = new Guacamole.Client(
+       // new Guacamole.HTTPTunnel("tunnel")
+        tunnel
+    );
+    // http://guacamole.apache.org/doc/guacamole-common-js/Guacamole.Client.html
+    // console.log(guac);
+
+    // Add client to display div
+    display.appendChild(guac.getDisplay().getElement());
+
+    // Error handler
+    guac.onerror = function(error) {
+        console.log(error);
+    };
+
+    // Connect
+    guac.connect('');
+
+    // Disconnect on close
+    window.onunload = function() {
+        guac.disconnect();
+    }
+
+    var ws_conning = false;
+    function reconnect(title){
+        if (! title) {title='连接已中断!'}
+        swal({
+          title: title,
+          text: "是否重连?",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: '重连',
+          cancelButtonText: '取消'
+        }).then((result) => {
+          if (result.value) {
+            document.location.reload();
+          }
+        })
+    }
+    //state change
+    tunnel.onstatechange = function(state){
+        //var STATE_CONNECTED     = 1;
+        //var STATE_DISCONNECTED  = 2;
+        console.log(state, '...........');
+        if (state == 1){
+            ws_conning = true;
+        } else if (ws_conning && state == 2){
+            reconnect(title='连接被管理员中止?!');
+        }
+    }
+    guac.onstatechange = function(state){
+        //alert closed
+        //var STATE_IDLE          = 0;
+        //var STATE_CONNECTING    = 1;
+        //var STATE_WAITING       = 2;
+        //var STATE_CONNECTED     = 3;
+        //var STATE_DISCONNECTING = 4;
+        //var STATE_DISCONNECTED  = 5;
+
+        if (state == 5){
+            reconnect();
+        }
+        // else if (state == 3){
+        //     console.log(guac.getDisplay.size);
+        //     guac.sendSize(window.innerWidth-10, window.innerHeight-60);
+        //     $(window).resize(function(){
+        //         guac.sendSize(window.innerWidth-10, window.innerHeight-60);
+
+        //     });
+        // }
+    }
+
+    // // 传送鼠标动作
+    // var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
+    // mouse.onmousedown =
+    // mouse.onmouseup   =
+    // mouse.onmousemove = function(mouseState) {
+    //     guac.sendMouseState(mouseState);
+    // };
+
+    // // 传送键盘动作
+    // var keyboard = new Guacamole.Keyboard(document);
+    // keyboard.onkeydown = function (keysym) {
+    //     guac.sendKeyEvent(1, keysym);
+    // };
+    // keyboard.onkeyup = function (keysym) {
+    //         guac.sendKeyEvent(0, keysym);
+    // };
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'admin/change_form.html' %}
+
+{% block admin_change_form_document_ready %}
+
+    {% block object-tools %}
+        <ul class="object-tools">
+            <li>{% url 'cmdb:user_edit' object_id as url_host %}
+                <a href="{{ url_host }}" target="_blank">主机操作 - 主机清单</a>
+            </li>
+        {{ block.super }}
+            
+        </ul>
+    {% endblock %}
+
+{% endblock %}

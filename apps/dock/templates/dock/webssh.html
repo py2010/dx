@@ -1,0 +1,170 @@
+{% extends 'base/_base.html'%}
+{% load staticfiles %}
+{% block title %}Web SSH{% endblock %}
+
+{% block left %}
+    {% include "base/_left.html" with cmdb_docker_container_active="active" %}
+{% endblock left %}
+
+
+{% block header %}
+    <link rel="stylesheet" href="{% static 'xterm/xterm.css' %}"/>
+    <!-- proton不支持search.show_only_matches样式隐藏未匹配节点 -->
+    <!-- <link rel="stylesheet" href="{% static 'jstree/themes/proton/style.min.css' %}"/> -->
+    <link rel="stylesheet" href="{% static 'jstree/themes/default/style.min.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/jquery-ui/jquery-ui.css'%}">
+    {# ※※※※◆jquery-ui需要在elfinder上方◆※※※※ #}
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/elfinder/css/elfinder.full.css'%}">
+{% endblock header %}
+
+
+
+{% block page-content %}
+<div class="row">
+
+    <div class="col-md-11" style="padding-left: 20px;">
+
+        <div class="span2 leftMenu">
+            <ul class="nav nav-tabs marginBottom" id="myTab">
+                <!-- <li class="active ">
+                    <a href="#help" class="backgroundRed">help info<button class="close closeTab" type="button" >×</button></a>
+                </li> -->
+            </ul>
+        </div>
+        <div class="tab-content span4">
+            <!-- <div class="tab-pane active" id="help">help info</div> -->
+        </div>
+
+    </div>
+</div>
+
+{% endblock page-content %}
+
+{% block footer-js %}
+<script src="{% static 'xterm/xterm.js' %}"></script>
+<script src="{% static 'xterm/addons/fit/fit.js' %}"></script>
+<script src="{% static 'xterm/addons/terminado/terminado.js' %}"></script>
+<script src="{% static 'xterm/addons/fullscreen/fullscreen.js' %}"></script>
+<script src="{% static 'jstree/jstree.js' %}"></script>
+
+<!-- elFinder JS (REQUIRED) -->
+<script src="{% static 'plugins/elfinder/js/elfinder.full.js'%}"></script>
+<script src="{% static 'plugins/jquery-ui/jquery-ui.js'%}"></script>
+
+<script type="application/javascript">
+
+    //shows the tab with passed content div id..paramter tabid indicates the div where the content resides
+    function showTab(tabId) {
+        $('#myTab a[href="#' + tabId + '"]').tab('show');
+    }
+
+
+    function connect_webssh(hostid, container) {
+        var tabId = "webssh_"+hostid; //this is id on tab content div where the
+        if ($("#"+tabId).length <= 0){
+            $('.nav-tabs').append('<li><a href="#' + tabId + '">' + container + '</a></li>');
+            $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
+            showTab(tabId);
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+            var ws_path = ws_scheme + '://' + window.location.host + '/dock/webssh/';
+            // console.log(ws_path);
+            make_terminal(document.getElementById(tabId), {rows: 32, cols: 106}, ws_path, hostid, container);
+        }else {
+            showTab(tabId);
+        }
+
+    }
+
+
+
+</script>
+<script type="application/javascript">
+
+    function make_terminal(element, size, ws_url,hostid,container) {
+        var term = new Terminal({
+            cols: size.cols,
+            rows: size.rows,
+            screenKeys: true,
+            useStyle: true,
+            // cursorBlink: false,  // Blink the terminal's cursor
+            // debug: true,
+        });
+        term.open(element, false);
+        var ws = new WebSocket(ws_url);
+        ws.onopen = function (event) {
+            ws.send(JSON.stringify(["hostid", hostid, container]));
+            //set terminal width and height
+            <!--ws.send(JSON.stringify(["set_size", size.rows, size.cols,-->
+                <!--window.innerHeight, window.innerWidth]));-->
+            term.on('data', async function (data) {
+                if(ws.readyState==1){
+                    ws.send(JSON.stringify(['stdin', data]));
+                    // ws.send(JSON.stringify(['stdin', 'ls\n']))
+                    // console.log(data);
+                }
+
+            });
+
+            term.on('title', function (title) {
+                document.title = title;
+            });
+
+            ws.onmessage = function (event) {
+                json_msg = JSON.parse(event.data);
+                switch (json_msg[0]) {
+                    case "stdout":
+                        term.write(json_msg[1]);
+                        break;
+                    case "disconnect":
+                        term.write("\r\n\r\n[WebSocket关闭...]\r\n");
+                        ws.close();
+                        // console.log(ws);
+                        break;
+                }
+            };
+        };
+        return {socket: ws, term: term};
+    }
+
+
+</script>
+
+
+<script type="application/javascript">
+
+    function getUrlParam(name) {
+           //解析当前URL参数，getUrlParam(参数名)
+           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+           var locationHref = decodeURIComponent(window.location.search);
+           var r = locationHref.substr(1).match(reg);
+           if(r != null) {
+               if(unescape){
+                   return unescape(r[2]);
+               }else{
+                   return r[2];
+               }
+           }else{
+               return null;
+           }
+       }
+
+    $(function () {
+        // 根据URL参数，连接终端
+        var host=getUrlParam('host');
+        var container=getUrlParam('container');
+        if (host && container) {
+            connect_webssh(host, container);
+        }
+
+    });
+
+
+
+</script>
+
+
+
+{% endblock footer-js %}
+
+

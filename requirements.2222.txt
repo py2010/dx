@@ -1,0 +1,61 @@
+# python3.6
+## centos7
+## yum install -y epel-release
+## yum install -y python36 python36-pip python36-devel
+
+django==2.2
+django-bootstrap3
+
+##使用postgresql
+##yum install -y postgresql-devel
+##apt install -y postgresql-server-dev-all
+#psycopg2
+
+##使用mysql
+##mysqlclient==1.4.2
+
+##centos
+##yum -y install mysql-devel
+##ubuntu
+##apt install libmariadbd-dev
+
+
+https://github.com/darklow/django-suit/tarball/v2
+
+paramiko
+pycrypto==2.6.1
+rsa
+
+
+
+uvicorn==0.7.1
+gunicorn
+#futures
+
+
+#djangorestframework
+
+# yum install -y gcc
+channels==2.2
+channels-redis
+#asgi-redis
+#daphne
+
+django_redis
+hiredis
+elasticsearch
+
+## 登陆时增加otp验证
+django_otp
+qrcode
+pillow
+
+pyzabbix
+
+#docker-compose
+#docker
+
+python-magic
+
+selectors
+

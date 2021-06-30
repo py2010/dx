@@ -1,0 +1,52 @@
+#!/bin/bash
+
+
+# path=`dirname "$0"` #脚本目录c
+path="$( cd "$( dirname "$0"  )" && pwd  )" #脚本目录c
+
+base=`dirname "$path"` #根路径
+
+cd $base
+
+
+case $1 in
+        reset|log|push|pull) git $*;exit ;;
+        # *) echo 'else';;
+esac
+
+# args="reset log push"
+# if [[ " $args " =~ " $1 " ]];then
+#   git $*
+#   exit
+# fi
+
+
+arg1=$1
+
+
+if [ -z "$arg1" ]; then
+arg1='自动提交'
+
+
+
+elif [ "$arg1" == "dx" ];then
+    user=root
+    ip=10.4.21.175
+    path=/data/dx
+    /usr/bin/rsync -tL -rv * --exclude-from=rsync.txt $user@$ip:$path
+
+    if [ "$2" == "r" ];then
+        #同步后需重启
+        /usr/bin/ssh $user@$ip 'cd $path && c/d restart'
+    fi
+
+    exit
+
+
+
+fi
+
+/usr/bin/git add .
+/usr/bin/git commit -a -m $arg1
+#git push
+echo `date`

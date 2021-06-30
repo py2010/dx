@@ -1,0 +1,32 @@
+version: '3'
+
+# 环境变量${PWD}, 为(在Linux宿主机上)dx项目根目录.
+# 环境变量PWD不存在时, (非Linux宿主机)则默认使用/opt/dx
+services:
+  dx:
+    build: .
+    image: 'py2010/dx'
+    container_name: dx
+    working_dir: /dx  # /dx为镜像自带的. /opt/dx为所挂载宿主机项目目录
+    env_file:
+      - .env
+    restart: always
+    network_mode: host  # 使用宿主机网络
+    # networks:
+    #   - network
+    volumes:
+      - ${PWD:-/opt/dx}:/opt/dx  # Linux宿主机项目所在目录挂载到容器/opt/dx
+
+  guacd:
+    # 提供网页访问rdp/vnc支持
+    image:  guacamole/guacd:1.2.0
+    container_name: guacd
+    restart: always
+    network_mode: host  # 使用宿主机网络
+    volumes:
+      # 挂载Linux宿主机项目media到容器, 用于dx网站中播放视频操作录像
+      - ${PWD:-/opt/dx}/media/guacamole:${GUACD_DATA_DIR:-/guacamole}
+      # 容器目录/guacamole, 必须与 dx/apps/guacamole/conf.py中的 "base_path"设置相同, 如有修改需同时修改.
+
+# networks:
+#   network: {}

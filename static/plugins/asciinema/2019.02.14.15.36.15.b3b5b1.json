@@ -1,0 +1,126 @@
+{
+  "width": 90, 
+  "version": 1, 
+  "command": "/bin/bash", 
+  "env": {
+    "TERM": "xterm", 
+    "SHELL": "/bin/bash"
+  }, 
+  "title": null, 
+  "duration": 12.254408, 
+  "stdout": [
+    [
+      0.000272, 
+      "Last login: Thu Feb 14 15:29:15 2019 from 192.168.80.237\r\r\n"
+    ], 
+    [
+      0.011394, 
+      "\u001b]0;root@dev:~\u0007\u001b[?1034h[root@dev ~]# "
+    ], 
+    [
+      1.533066, 
+      "l"
+    ], 
+    [
+      0.350616, 
+      "\r\n-bash: l: \u672a\u627e\u5230\u547d\u4ee4\r\n\u001b]0;root@dev:~\u0007[root@dev ~]# "
+    ], 
+    [
+      0.670204, 
+      "l"
+    ], 
+    [
+      0.166341, 
+      "l"
+    ], 
+    [
+      0.119009, 
+      "\r\n\u603b\u7528\u91cf 344596\r\ndrwxr-xr-x   3 root root         42 7\u6708  30 2018 \u001b[0m\u001b[01;34m33\u001b[0m\r\n-rw-r--r--   1 root root      11970 7\u6708  13 2018 agent.py\r\n-rw-------.  1 root root       1707 2\u6708  12 2018 anaconda-ks.cfg\r\n-rwxr--r--   1 root root   43090167 9\u6708  18 07:10 \u001b[01;32mbusybox(latest).tar\u001b[0m\r\ndrwxr-xr-x   3  502 games      4096 4\u6708   9 2018 \u001b[01;34mk8s_images\u001b[0m\r\n-rwxr--r--   1 root root  301197757 3\u6708   9 2018 \u001b[01;32mk8s_images.tar.bz2\u001b[0m\r\n-rw-r--r--   1 root root       3783 4\u6708  11 2018 kubeadm-kuberouter-all-features.yaml\r\ndrwxr-xr-x   9 root root        184 7\u6708   2 2016 \u001b[01;34mkubernetes\u001b[0m\r\n-rw-r--r--   1 root root       7186 11\u6708  9 09:20 lextab.py\r\ndrwxr-xr-x  19 root root       4096 12\u6708 21 16:23 \u001b[01;34mopenssl-1.1.1a\u001b[0m\r\n-rw-r--r--   1 root root    8350547 11\u6708 20 22:07 \u001b[01;31mopenssl-1.1.1a.tar.gz\u001b[0m\r\n-rw-r--r--   1 root root        302 12\u6708 21 16:25 rootsmca.key\r\ndrwxr-xr-x   8 root root         89 4\u6708   3 2018 \u001b[01;34mrpmbuild\u001b[0m\r\n-rw-r--r--   1 root root      11933 3\u6708 "
+    ], 
+    [
+      0.00013, 
+      " 14 2018 tty_agent.py\r\n-rw-r--r--   1 root root       4168 2\u6708  13 09:50 \u001b[01;31mtty_agent.py.tar.gz\u001b[0m\r\n-rw-r--r--   1 root root       9823 5\u6708  22 2018 Untitled.ipynb\r\n-rw-r--r--   1 root root     141447 11\u6708  9 09:20 yacctab.py\r\n-rw-r--r--   1 root root        117 11\u6708 14 11:01 \u65b0\u5efa\u6587\u672c\u6587\u6863.txt\r\n\u001b]0;root@dev:~\u0007[root@dev ~]# "
+    ], 
+    [
+      0.940971, 
+      "t"
+    ], 
+    [
+      0.060844, 
+      "o"
+    ], 
+    [
+      0.112319, 
+      "p"
+    ], 
+    [
+      0.258723, 
+      "\r\n\u001b[?1h\u001b=\u001b[?25l"
+    ], 
+    [
+      0.152867, 
+      "\u001b[H\u001b[2J\u001b(B\u001b[mtop - 15:36:19 up  6:56,  7 users,  load average: 0.36, 0.17, 0.12\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nTasks:\u001b(B\u001b[m\u001b[39;49m\u001b[1m 128 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   1 \u001b(B\u001b[m\u001b[39;49mrunning,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 125 \u001b(B\u001b[m\u001b[39;49msleeping,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   2 \u001b(B\u001b[m\u001b[39;49mstopped,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mzombie\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m100.0 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Mem :\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2907668 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1071588 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1129500 \u001b(B\u001b[m\u001b[39;49mused,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   706580 \u001b(B\u001b[m\u001b[39;49mbuff/cache\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Swap:\u001b(B\u001b[m\u001b[39;49m\u001b[1m        0 \u001b(B\u001b[m\u001b[39"
+    ], 
+    [
+      0.000243, 
+      ";49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m        0 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m        0 \u001b(B\u001b[m\u001b[39;49mused.\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1529272 \u001b(B\u001b[m\u001b[39;49mavail Mem \u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b[K\r\n\u001b[7m  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m11464 root      20   0  222028  57848   5228 S  6.7  2.0   0:18.03 python                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    1 root      20   0  125288   3812   2528 S  0.0  0.1   0:00.84 systemd                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    2 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kthreadd                                                     \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    3 root      20   0       0      0      0 S  0.0  0.0   0:01.82 ksoftirqd/0                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    5 root       0 -20       0      0      0 S  0.0  0.0   0:"
+    ], 
+    [
+      8.7e-05, 
+      "00.00 kworker/0:0H                                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    9 root      20   0       0      0      0 S  0.0  0.0   0:05.71 rcu_sched                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   10 root      rt   0       0      0      0 S  0.0  0.0   0:00.07 watchdog/0                                                   \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   12 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kdevtmpfs                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   13 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 netns                                                        \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   14 root    "
+    ], 
+    [
+      0.000256, 
+      "  20   0       0      0      0 S  0.0  0.0   0:00.00 khungtaskd                                                   \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   15 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 writeback                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   16 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kintegrityd                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   17 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 bioset                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   18 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kblockd                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   19 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 md                                                           \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   25 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kswapd0                                              "
+    ], 
+    [
+      9.1e-05, 
+      "        \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   26 root      25   5       0      0      0 S  0.0  0.0   0:00.00 ksmd                                                         \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   27 root      39  19       0      0      0 S  0.0  0.0   0:00.60 khugepaged                                                   \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   28 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 crypto                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   36 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kthrotld                                                     \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   37 root      20   0       0      0      0 S  0.0  0.0   0:00.59 kworker/u128:1                                               \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   38 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kmpath_rdacd                                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K"
+    ], 
+    [
+      3.005524, 
+      "\u001b[H\u001b(B\u001b[mtop - 15:36:22 up  6:56,  7 users,  load average: 0.33, 0.17, 0.12\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1.0 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.3 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 98.6 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m11098 root      20   0  891820 103948   8628 S  2.0  3.6   0:41.00 python                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m11464 root      20   0  222028  57848   5228 S  0.7  2.0   0:18.05 python                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m  935 redis     20   0  142780   6116   1504 S  0.3  0.2   0:38.47 redis-server                                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m 1237 root      20   0 2055348  79624  10864 S  0.3  2.7   2:43.54 jav"
+    ], 
+    [
+      0.000112, 
+      "a                                                         \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m 1363 root      20   0  294424  24616  12896 S  0.3  0.8   0:09.71 docker-containe                                              \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m 9264 root      20   0 1046676  80544   8648 S  0.3  2.8   0:03.93 python                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    1 root      20   0  125288   3812   2528 S  0.0  0.1   0:00.84 systemd                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    2 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kthreadd                                                     \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    3 root      20   0       0      0      0 S  0.0  0.0   0:01.82 ksoftirqd/0                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H                                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    7 root      rt   0 "
+    ], 
+    [
+      0.000253, 
+      "      0      0      0 S  0.0  0.0   0:00.00 migration/0                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m    9 root      20   0       0      0      0 S  0.0  0.0   0:05.71 rcu_sched                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   10 root      rt   0       0      0      0 S  0.0  0.0   0:00.07 watchdog/0                                                   \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   12 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kdevtmpfs                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   13 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 netns                                                        \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   14 root      20   0       0      0      0 S  0.0  0.0   0:00.00 khungtaskd                                                   \u001b"
+    ], 
+    [
+      0.000105, 
+      "(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   15 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 writeback                                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   16 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kintegrityd                                                  \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   17 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 bioset                                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   18 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kblockd                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   19 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 md                                                           \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   25 root      20   0       0      0      0 S  0.0  0.0   0:00.00 kswapd0                                                      \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m   26 root      25   5       0      0      0 S  0.0  0.0   0:00.00 ksmd           "
+    ], 
+    [
+      0.000103, 
+      "                                              \u001b(B\u001b[m\u001b[39;49m\u001b[K"
+    ], 
+    [
+      2.954387, 
+      "\u001b[?1l\u001b>\u001b[32;1H\r\n\u001b[?12l\u001b[?25h\u001b[K\u001b]0;root@dev:~\u0007[root@dev ~]# "
+    ], 
+    [
+      1.23407, 
+      "e"
+    ], 
+    [
+      0.250828, 
+      "x"
+    ], 
+    [
+      0.134123, 
+      "i"
+    ], 
+    [
+      0.158431, 
+      "t"
+    ], 
+    [
+      0.13903, 
+      "\r\n\u767b\u51fa\r\n"
+    ]
+  ], 
+  "height": 32
+}

@@ -1,0 +1,17 @@
+.git
+.svn
+nohup.out
+*.log
+*.pyc
+*.bak
+static/bak
+c/d.sh
+static/cert
+static/agent.py
+apps/*/migrations/0*.py
+apps/*/migrations/*/*
+inspinia_admin-v2.7
+.tags
+settings.py
+__pycache__
+imap

@@ -1,0 +1,64 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}{{ view.model_meta.verbose_name }}{% endblock %}
+
+
+{% block page-content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>信息管理</h2>
+            <ol class="breadcrumb">
+                <li>{% url 'index' as index %}
+                    <a href="{% firstof index '/' %}">主页</a>
+                </li>
+                <li>
+                    <a href="../">{{ view.model_meta.verbose_name }}</a>
+                </li>
+                <li class="active">
+                    <strong>{{ object }}</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>详细信息</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <table class="table">
+                        <tbody>
+                            {% for field in object.fields_list %}
+                            <tr>
+                                <td><b>{{ field.0 }}:</b></td>
+                                <td>{{ field.1 }}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+

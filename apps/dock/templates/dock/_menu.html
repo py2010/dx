@@ -1,0 +1,49 @@
+
+
+            {% show_menu_url 'dock:docker_host_list' 'dock.view_dockerhost' as dockerhost %}
+            {% show_menu_url 'dock:docker_yml_list' 'dock.view_dockeryml' as dockeryml %}
+            {% show_menu_url 'dock:docker_compose_list' 'dock.view_dockercompose' as dockercompose %}
+            {% show_menu_url 'dock:docker_imagefile_list' 'dock.view_dockerimagefile' as dockerimagefile %}
+
+            {% show_menu_url 'dock:docker_net' 'dock.change_dockerhost' as docker_net %}
+            {% show_menu_url 'dock:docker_image' 'dock.change_dockerhost' as docker_image %}
+            {% show_menu_url 'dock:docker_container' 'dock.change_dockerhost' as docker_container %}
+
+            {% if dockerhost or dockeryml or dockercompose or docker_net %}
+            <li>
+                <a><i class="fa fa-calendar"></i> <span class="nav-label">容器管理</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+
+                    {% if dockerhost %}
+                    <li><a href="{{ dockerhost }}">宿主机</a></li>
+                    {% endif %}
+
+                    {% if dockeryml %}
+                    <li><a href="{{ dockeryml }}">YML管理</a></li>
+                    {% endif %}
+
+                    {% if dockercompose %}
+                    <li><a href="{{ dockercompose }}">容器编排</a></li>
+                    {% endif %}
+
+                    {% if dockerimagefile %}
+                    <li><a href="{{ dockerimagefile }}">镜像包</a></li>
+                    {% endif %}
+
+                    {% if docker_net %}
+                    <li><a href="{{ docker_net }}">容器网络</a></li>
+                    {% endif %}
+
+                    {% if docker_image %}
+                    <li><a href="{{ docker_image }}">镜像管理</a></li>
+                    {% endif %}
+
+                    {% if docker_container %}
+                    <li><a href="{{ docker_container }}">容器管理</a></li>
+                    {% endif %}
+
+                </ul>
+            </li>
+            {% endif %}
+

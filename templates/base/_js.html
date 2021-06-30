@@ -1,0 +1,113 @@
+{% load  static %}
+
+<script src="{% static  'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static  'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static  'plugins/vue/2.6.10/vue.min.js' %}"></script>
+<script src="{% static  'plugins/element-ui/2.12.0/index.js' %}"></script>
+
+
+<script src="{% static  'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+<script src="{% static  'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{% static  'js/inspinia.js' %} "></script>
+<script src="{% static  'js/plugins/pace/pace.min.js' %}"></script>
+
+
+<script src="{% static  'js/datatables.min.js' %}"></script>
+
+
+<script src="{% static  'js/plugins/select2/select2.full.min.js' %}"></script>
+
+
+<script src="{% static  'plugins/axios/axios.min.js' %}"></script>
+<script src="{% static  'plugins/request.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+<script src="{% static  'js/my.js' %}"></script>
+
+<script type="text/JavaScript">
+    $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+</script>
+
+
+
+
+<!-- Page-Level Scripts -->
+<script>
+   $(document).ready(function () {
+        $('.dataTables-example').DataTable({
+
+            "oLanguage": {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "对不起，查询不到任何相关数据",
+                "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_条记录",
+                "sInfoEmtpy": "找不到相关数据",
+                "sInfoFiltered": " 数据表中共为 _MAX_ 条记录",
+                "sProcessing": "正在加载中...",
+                "sSearch": "搜索",
+                "oPaginate": {
+                    "sFirst": "第一页",
+                    "sPrevious": " 上一页 ",
+                    "sNext": " 下一页 ",
+                    "sLast": " 最后一页 "
+                }
+            },
+            order: [[0, 'asc']],
+            columnDefs: [{
+                'targets': [0],    //不排序
+                'orderable': false,
+                'orderData': [ 0, 1 ] //第1列排再按第二列排
+            }],
+
+
+            dom: '<"html5buttons"B>lTfgitp,',
+
+            buttons: [
+                    {extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ],
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "全部"]]
+        });
+
+
+    });
+
+
+    $("#CheckedAll").click(function () {
+        if ($(this).is(":checked")) {
+            $("[name=id]:checkbox").prop("checked", true);
+        } else {
+            $("[name=id]:checkbox").prop("checked", false);
+        }
+    });
+
+
+    // 左边栏激活当前打开菜单样式
+    var links = $("#side-menu li [href^='/']");
+    for (i=links.length-1;i>1;i--) {
+        // 因首页"/"在最上面最先匹配, 所以倒序
+        if (window.location.pathname.indexOf(links[i].pathname) >= 0) {
+            // console.log(links[i]);
+            links[i].parentElement.className="active"
+            links[i].parentElement.parentElement.parentElement.className="active"
+            break;
+        }
+    }
+
+</script>
+
+
+

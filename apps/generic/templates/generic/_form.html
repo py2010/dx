@@ -1,0 +1,92 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}{{ view.model_meta.verbose_name }}{% endblock %}
+
+
+{% block page-content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>信息管理</h2>
+            <ol class="breadcrumb">
+                <li>{% url 'index' as index %}
+                    <a href="{% firstof index '/' %}">主页</a>
+                </li>
+                <li>
+                    <a href="../../">{{ view.model_meta.verbose_name }}</a>
+                </li>
+                <li class="active">
+                    <strong>{% firstof object '新增' %}</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{ view.model_meta.verbose_name }} - {% if object %}修改{% else %}新增{% endif %}</h5>
+
+                </div>
+                <div class="ibox-content">
+
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        <!-- autocomplete="new-password" -->
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" style="margin: 20px auto 0px">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                    {% block form %}
+                        <!-- 表单页数据 -->
+                        {% bootstrap_form form layout="horizontal" %}
+                    {% endblock %}
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-white" type="reset">重置</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block footer-js %}
+    <script src="/static/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            // 表单多对多字段设置样式, 便于多选配置
+            $("form select[multiple]").bootstrapDualListbox({
+                // selectorMinimalHeight: 100
+            });
+
+        });
+
+
+    </script>
+{% endblock footer-js %}
+
+
+

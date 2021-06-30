@@ -1,0 +1,29 @@
+
+{% comment help %} 
+
+    {% show_menu_url '网址视图' '权限码1' 'and' '权限码2' as url_xx项 %}
+    多个权限未提供逻辑与或时, 默认为or, 也就是'or' 可以省略.
+
+{% endcomment %}
+
+            {% show_menu_url 'ops:userprofile_list' 'auth.view_user' as webuser %}
+            {% show_menu_url 'ops:group_list' 'auth.view_group' as group %}
+
+            {% if webuser or host or group %}
+            <li>
+                <a><i class="fa fa-server"></i> <span class="nav-label">用户管理</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+
+                    {% if webuser %}
+                    <li><a href="{{ webuser }}">网站用户</a></li>
+                    {% endif %}
+
+                    {% if group %}
+                    <li><a href="{{ group }}">组/角色</a></li>
+                    {% endif %}
+
+                </ul>
+            </li>
+            {% endif %}
+

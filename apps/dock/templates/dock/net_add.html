@@ -1,0 +1,238 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}添加容器网络{% endblock %}
+
+{% block left %}
+    {% include "base/_left.html" with cmdb_docker_net_active="active" %}
+{% endblock left %}
+
+
+{% block page-content %}
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>资产管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                <li>
+                    <a href="{% url 'dock:docker_host_list' %}">Docker管理</a>
+                </li>
+                <li>
+                    <a href="{% url 'dock:docker_container' client.dockerhost.id %}">容器网络 - {{ client.dockerhost }}</a>
+                </li>
+                <li class="active">
+                    <strong>新建网络</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>创建网络</h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" class="form-horizontal" action=""
+                        method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger" style="margin: 20px auto 0px">
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+
+                        <!-- <div class="form-group">
+                            <label class="col-md-2 control-label" for="id_host">宿主机</label>
+                            <div class="col-md-9">
+                                <span class="form-control">{{ client.dockerhost }}</span>
+                            </div>
+                        </div> -->
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">网络名称</label>
+                            <div class="col-md-9">
+                                <input type="text" name="name" value="{{ form.data.name }}" required="" maxlength="100" placeholder="网络名称" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">网络类型</label>
+                            <div class="col-md-9">
+                                <select name="driver" id="id_driver" required="" class="form-control">
+                                    <option value="macvlan" selected>macvlan</option>
+                                    <option value="bridge">桥接</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">接口</label>
+                            <div class="col-md-9">
+                                <input type="text" name="interface" required="" value="{{ form.data.interface }}" maxlength="100" placeholder="对应的宿主机网络接口，比如docker0 eth0 ens33" class="form-control">
+                                <div class="help-block">如果是桥接网络类型，只需先添加网桥brctl addbr xxx，<br/>然后在此输入xxx，跳跃节点/网段/网关 在下面进行设置</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display:none;" id="id_ip">
+                            <label class="col-md-2 control-label">桥接接口IP</label>
+                            <div class="col-md-9">
+                                <input type="text" name="ip" value="{{ form.data.ip }}" maxlength="100" placeholder="设置宿主机桥接接口IP" class="form-control">
+                                <div class="help-block">
+                                桥接网络类型，设置接口的IP，(bridge: --gateway=xxx)<br/>
+                                <span style="color:#f44">注意：桥接接口若已有网络设置，将会清空；如果IP设置错误，将导致此接口的网络连接故障！</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">网段</label>
+                            <div class="col-md-9">
+                                <input type="text" name="subnet" required="" value="{{ form.data.subnet }}" maxlength="100" placeholder="192.168.80.0/24" class="form-control">
+                                <div class="help-block">子容器的网段，比如 192.168.80.0/24</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">网关</label>
+                            <div class="col-md-9">
+                                <input type="text" name="gateway" required="" value="{{ form.data.gateway }}" maxlength="100" placeholder="192.168.80.1" class="form-control">
+                                <div class="help-block">子容器的网关，比如 192.168.80.1<br/>macvlan: --gateway=xxx<br/>bridge: --aux-address "DefaultGatewayIPv4=xxx"</div>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-white" type="reset">重置</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+
+{% block footer-js %}
+    <script>
+        function conn_docker(url, textarea_height){
+            $.ajax({
+                url: url,
+                type: 'GET',
+                timeout: 20000,
+                error: function(){
+                    $("#server_msg").html('<option value="">网站连接失败！请联系CMDB管理员</option>');
+                },
+                success: function(msg_html){
+                    // json格式化
+                    // console.log(msg_html);
+                    try{
+                        var msg_html = JSON.stringify(JSON.parse(msg_html), null, 4);
+                    }catch(err){}finally{
+                        $('#server_msg').val(msg_html);
+                        // console.log(txt);
+                        $('#server_msg')[0].style.minHeight= textarea_height;
+                    } 
+                }
+            });
+        };
+
+        $(document).ready(function(){
+            // if()
+            $('#id_driver').change(function() {
+
+                if (this.value=='bridge') {
+                    $('#id_ip').css('display','');
+                }else{
+                    $('#id_ip').css('display','none');
+                }
+            });
+
+            {% if form.data.driver == 'bridge' %}
+            $('#id_driver').val('bridge');
+            $('#id_ip').css('display','');
+            {% endif %}
+
+            {% if client %}
+
+            // $( ".btn-danger.btn-xs" ).click()
+            $('#tb').on('click', 'button', function (e) {
+                console.log($(this));
+                var url="{% url 'dock:docker_container_do' client.dockerhost.id %}?id="+this.parentElement.parentElement.children[0].children[0].value;
+                var textarea_height="400px";
+                if (this.className=="btn btn-danger btn-xs") {
+                    if(! window.confirm('确认删除容器？')){
+                        return false;
+                    }
+                    var url="{% url 'dock:docker_container_rm' client.dockerhost.id %}?id="+this.parentElement.parentElement.children[0].children[0].value;
+                    textarea_height="100px";
+                } else if (this.className=="btn btn-primary btn-xs") {
+                    url=url+"&info=attrs";
+                } else if (this.className=="btn btn-success btn-xs") {
+                    url=url+"&info=logs";
+                } else if (this.className=="btn btn-info btn-xs") {
+                    url=url+"&info=start";
+                    textarea_height="100px";
+                } else if (this.className=="btn btn-warning btn-xs") {
+                    url=url+"&info=stop";
+                    textarea_height="100px";
+                }
+
+                $("#server_div").show();
+                $("#server").text(this.parentElement.parentElement.children[1].textContent+" "+this.textContent);
+                conn_docker(url, textarea_height);
+
+            });
+
+
+            $("#delall").click(function(){
+                var container_ids = '';
+                var cs=document.getElementsByName('id');
+                for (i=0; i < cs.length; i++) {
+                    if (cs[i].checked) {
+                        container_ids = container_ids+cs[i].value+',';
+                        // console.log(cs[i].value);
+                    }
+                }
+                if (! container_ids) {return false;}
+                if(! window.confirm('确认批量删除容器？')){
+                    return false;
+                }
+                var url="{% url 'dock:docker_container_rm' client.dockerhost.id %}?id="+container_ids;
+                console.log(container_ids);
+                $("#server_div").show();
+                $("#server").text("批量删除容器");
+                conn_docker(url, "100px");
+            });
+            {% endif %}
+
+        });
+
+
+    </script>
+{% endblock footer-js %}
+
+

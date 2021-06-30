@@ -1,0 +1,41 @@
+{% extends "generic/_list.html" %}
+
+
+                        {% block list_table %}
+                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                <thead>
+                                <tr>
+                                    <th width="20"><input type="checkbox" id="CheckedAll"></th>
+                                    <th>名称</th>
+                                    <th>IP匹配</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for object in object_list %}
+
+                                    <tr id="{{ object.id }}">
+                                        <td><input type="checkbox" value="{{ object.id }}"  name="id"></td>
+                                        <td class="center">{% url viewname_update object.id as obj_update %}
+                                            <a href="{{ obj_update }}">{{ object.name }}</a>
+                                        </td>
+                                        <td class="center">{{ object.ip }}</td>
+                                        <td>
+                                            <a class="btn btn-danger btn-xs">删除</a>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        {% endblock %}
+
+
+    {% block list_js %}
+        {# 列表js #}
+    {% endblock %}

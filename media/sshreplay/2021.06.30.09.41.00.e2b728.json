@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "width": 90,
+  "height": 32,
+  "duration": 21.492201,
+  "command": null,
+  "title": null,
+  "env": {
+    "TERM": null,
+    "SHELL": "sh"
+  },
+  "stdout": [
+    [
+      0.000408,
+      "\r\nWelcome to Deepin 15.10 GNU/Linux\r\n\r\n    * Homepage:https://www.deepin.org/\r\n\r\n    * Bugreport:https://feedback.deepin.org/feedback/\r\n\r\n    * Community:https://bbs.deepin.org/\r\n\r\nLast login: Wed Jun 30 09:37:15 2021 from 192.168.80.236\r\r\n"
+    ],
+    [
+      0.030463,
+      "\u001b]0;root@xyf-PC: ~\u0007root@xyf-PC:~# "
+    ],
+    [
+      3.851456,
+      "ps aux|grep python\r\n"
+    ],
+    [
+      0.008719,
+      "root      6868  0.0  0.3 249464 31956 ?        Sl   09:01   0:00 /usr/bin/python3 /usr/share/system-config-printer/applet.py\r\n"
+    ],
+    [
+      0.002894,
+      "root     10032  0.7  1.0 433784 87528 pts/2    S+   09:38   0:01 /usr/local/bin/python3 -u manage.py runserver [::]:8088\r\nroot     10049  5.4  1.5 773648 126216 pts/2   Sl+  09:38   0:07 /usr/local/bin/python3 manage.py runserver [::]:8088\r\nroot     10193  0.6  0.6 531532 50284 pts/3    Sl+  09:39   0:00 /usr/local/bin/python3.6 /usr/local/bin/docker-compose up\r\nroot     10321  4.0  1.1 734280 91364 ?        Sl   09:39   0:03 /usr/bin/python3 -u manage.py proxy_sshd\r\nroot     10322  2.6  0.8 235432 64876 ?        S    09:39   0:02 /usr/bin/python3 -u manage.py runserver [::]:8066\r\nroot     10420  5.5  1.1 584852 96140 ?        Sl   09:39   0:04 /usr/bin/python3 manage.py runserver [::]:8066\r\nroot     10469  0.0  0.9 438840 77048 ?        S    09:39   0:00 /usr/bin/python3 -u manage.py proxy_sshd\r\n"
+    ],
+    [
+      0.001822,
+      "root     10470  0.0  0.9 438840 77048 ?        S    09:39   0:00 /usr/bin/python3 -u manage.py proxy_sshd\r\nroot     10471  0.0  0.9 438840 77048 ?        S    09:39   0:00 /usr/bin/python3 -u manage.py proxy_sshd\r\nroot     10675  0.0  0.0  14532   992 pts/4    R+   09:41   0:00 grep python\r\n\u001b]0;root@xyf-PC: ~\u0007root@xyf-PC:~# "
+    ],
+    [
+      5.922892,
+      "pids=`pidof python python3 |awk '{for(i=1;i<=NF;i++){ printf $i; if(i!=NF) printf \",\";}}'`;top -c -d 0.5 -p $pids\r\n"
+    ],
+    [
+      0.012387,
+      "\u001b[?1h\u001b=\u001b[?25l"
+    ],
+    [
+      0.151454,
+      "\u001b[H\u001b[2J\u001b(B\u001b[mtop - 09:41:10 up 40 min,  6 users,  load average: 0.77, 0.72, 0.66\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nTasks:\u001b(B\u001b[m\u001b[39;49m\u001b[1m   9 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mrunning,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   9 \u001b(B\u001b[m\u001b[39;49msleeping,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mstopped,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mzombie\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n"
+    ],
+    [
+      0.00219,
+      "%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  5.0 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  3.9 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.1 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 90.6 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.3 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.1 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Mem :\u001b(B\u001b[m\u001b[39;49m\u001b[1m  8042552 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2085532 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2790140 \u001b(B\u001b[m\u001b[39;49mused,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  3166880 \u001b(B\u001b[m\u001b[39;49mbuff/cache\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Swap:\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4194300 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4194300 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m        0 \u001b(B\u001b[m\u001b[39;49mused.\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4701936 \u001b(B\u001b[m\u001b[39;49mavail Mem \u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b[K\r\n\u001b[7m  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   0.0  1.6   0:07.78 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   0.0  1.2   0:04.95 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91388  16768 S   0.0  1.1   0:03.56 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10032 root      20   0  433784  87528  19400 S   0.0  1.1   0:01.03 /usr/local/bin/python3 -u manage.py runserver [::]:8088                                 \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10471 root      20   0  438840  77048   3648 S   0.0  1.0   0:00.00 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10470 root      20   0  438840  77048   3648 S   0.0  1.0   0:00.00 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10469 root      20   0  438840  77048   3648 S   0.0  1.0   0:00.00 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10322 root      20   0  235432  64876  13712 S   0.0  0.8   0:02.35 /usr/bin/python3 -u manage.py runserver [::]:8066                                       \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m 6868 root      20   0  249464  31956  15556 S   0.0  0.4   0:00.31 /usr/bin/python3 /usr/share/system-config-printer/applet.py                             \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b[J"
+    ],
+    [
+      0.498756,
+      "\u001b[H\u001b(B\u001b[mtop - 09:41:11 up 40 min,  6 users,  load average: 0.77, 0.72, 0.66\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nTasks:\u001b(B\u001b[m\u001b[39;49m\u001b[1m   9 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mrunning,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   9 \u001b(B\u001b[m\u001b[39;49msleeping,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mstopped,\u001b(B\u001b[m\u001b[39;49m\u001b[1m   0 \u001b(B\u001b[m\u001b[39;49mzombie\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2.5 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1.5 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 95.9 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   8.0  1.6   0:07.82 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\u001b(B\u001b[m10321 root      20   0  734280  91396  16768 S   0.0  1.1   0:03.56 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n\r\n\r\n\u001b[J"
+    ],
+    [
+      0.501023,
+      "\u001b[H\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1.0 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2.0 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 97.0 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   0.0  1.6   0:07.82 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   6.0  1.2   0:04.98 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91404  16768 S   2.0  1.1   0:03.57 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n\r\n\r\n\u001b[J"
+    ],
+    [
+      0.501178,
+      "\u001b[H\u001b(B\u001b[mtop - 09:41:12 up 40 min,  6 users,  load average: 0.77, 0.72, 0.66\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2.5 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.5 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 97.0 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   8.0  1.6   0:07.86 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   0.0  1.2   0:04.98 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91408  16768 S   0.0  1.1   0:03.57 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n\r\n\r\n\u001b[J"
+    ],
+    [
+      0.500745,
+      "\u001b[H\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4.5 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  3.5 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 92.0 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   0.0  1.6   0:07.86 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   6.0  1.2   0:05.01 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91412  16768 S   0.0  1.1   0:03.57 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n\r\n\r\n\u001b[J"
+    ],
+    [
+      0.501381,
+      "\u001b[H\u001b(B\u001b[mtop - 09:41:13 up 40 min,  6 users,  load average: 0.77, 0.72, 0.66\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  5.3 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  6.2 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 88.5 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Mem :\u001b(B\u001b[m\u001b[39;49m\u001b[1m  8042552 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2083928 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  2791500 \u001b(B\u001b[m\u001b[39;49mused,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  3167124 \u001b(B\u001b[m\u001b[39;49mbuff/cache\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\nKiB Swap:\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4194300 \u001b(B\u001b[m\u001b[39;49mtotal,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4194300 \u001b(B\u001b[m\u001b[39;49mfree,\u001b(B\u001b[m\u001b[39;49m\u001b[1m        0 \u001b(B\u001b[m\u001b[39;49mused.\u001b(B\u001b[m\u001b[39;49m\u001b[1m  4700600 \u001b(B\u001b[m\u001b[39;49mavail Mem \u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   6.0  1.6   0:07.89 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   0.0  1.2   0:05.01 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91416  16768 S   0.0  1.1   0:03.57 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n"
+    ],
+    [
+      0.001774,
+      "\r\n\r\n\u001b[J"
+    ],
+    [
+      0.499156,
+      "\u001b[H\r\n\r\n%Cpu(s):\u001b(B\u001b[m\u001b[39;49m\u001b[1m  3.5 \u001b(B\u001b[m\u001b[39;49mus,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  1.5 \u001b(B\u001b[m\u001b[39;49msy,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mni,\u001b(B\u001b[m\u001b[39;49m\u001b[1m 95.0 \u001b(B\u001b[m\u001b[39;49mid,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mwa,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mhi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49msi,\u001b(B\u001b[m\u001b[39;49m\u001b[1m  0.0 \u001b(B\u001b[m\u001b[39;49mst\u001b(B\u001b[m\u001b[39;49m\u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\u001b[K\r\n\r\n\u001b(B\u001b[m10049 root      20   0  773648 126216  25724 S   0.0  1.6   0:07.89 /usr/local/bin/python3 manage.py runserver [::]:8088                                    \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10420 root      20   0  584852  96140  16240 S   7.8  1.2   0:05.05 /usr/bin/python3 manage.py runserver [::]:8066                                          \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\u001b(B\u001b[m10321 root      20   0  734280  91424  16768 S   2.0  1.1   0:03.58 /usr/bin/python3 -u manage.py proxy_sshd                                                \u001b(B\u001b[m\u001b[39;49m\u001b[K\r\n\r\n\r\n\r\n\r\n\r\n\r\n\u001b[J"
+    ],
+    [
+      0.096396,
+      "\u001b[?1l\u001b>\u001b[39;1H\r\n\u001b[?12l\u001b[?25h\u001b[K"
+    ],
+    [
+      0.001999,
+      "\u001b]0;root@xyf-PC: ~\u0007root@xyf-PC:~# "
+    ],
+    [
+      1.104689,
+      "pids=`pidof python python3 |awk '{for(i=1;i<=NF;i++){ printf $i; if(i!=NF) printf \",\";}}'`;top -c -d 0.5 -p $pids"
+    ],
+    [
+      0.207249,
+      "\r\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[Cs aux|grep python\u001b[K"
+    ],
+    [
+      0.707879,
+      "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bids=`pidof python python3 |awk '{for(i=1;i<=NF;i++){ printf $i; if(i!=NF) printf \",\";}}'`;top -c -d 0.5 -p $pids"
+    ],
+    [
+      0.218897,
+      "\r\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[K"
+    ],
+    [
+      0.207486,
+      "\u0007"
+    ],
+    [
+      1.709329,
+      "netstat -tnpl\r\n"
+    ],
+    [
+      0.021123,
+      "Active Internet connections (only servers)\r\nProto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    \r\ntcp        0      0 0.0.0.0:902             0.0.0.0:*               LISTEN      5235/vmware-authdla \r\ntcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      3567/mysqld         \r\ntcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      3589/redis-server 1 \r\ntcp        0      0 127.0.0.1:4300          0.0.0.0:*               LISTEN      4411/wineserver.rea \r\ntcp        0      0 127.0.0.1:4301          0.0.0.0:*               LISTEN      4411/wineserver.rea \r\ntcp        0      0 127.0.0.1:8307          0.0.0.0:*               LISTEN      5242/vmware-hostd   \r\ntcp        0      0 0.0.0.0:4822            0.0.0.0:*               LISTEN      6001/guacd          \r\ntcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      3139/sshd           \r\ntcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN      1275/inetd          \r\ntcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      1232/cupsd          \r\ntcp        0      0 0.0.0.0:8443            0.0.0.0:*               LISTEN      5242/vmware-hostd   \r\n"
+    ],
+    [
+      0.002448,
+      "tcp6       0      0 :::8066                 :::*                    LISTEN      10420/python3       \r\ntcp6       0      0 :::18500                :::*                    LISTEN      5697/docker-proxy   \r\ntcp6       0      0 :::902                  :::*                    LISTEN      5235/vmware-authdla \r\ntcp6       0      0 :::2375                 :::*                    LISTEN      4572/dockerd        \r\ntcp6       0      0 :::2222                 :::*                    LISTEN      10321/python3       \r\ntcp6       0      0 ::1:631                 :::*                    LISTEN      1232/cupsd          \r\ntcp6       0      0 :::8088                 :::*                    LISTEN      10049/python3       \r\ntcp6       0      0 :::8443                 :::*                    LISTEN      5242/vmware-hostd   \r\ntcp6       0      0 :::18588                :::*                    LISTEN      5684/docker-proxy   \r\n\u001b]0;root@xyf-PC: ~\u0007root@xyf-PC:~# "
+    ],
+    [
+      2.205053,
+      "\r\n"
+    ],
+    [
+      0.001713,
+      "\u001b]0;root@xyf-PC: ~\u0007root@xyf-PC:~# "
+    ],
+    [
+      1.259378,
+      "e"
+    ],
+    [
+      0.249756,
+      "x"
+    ],
+    [
+      0.090608,
+      "i"
+    ],
+    [
+      0.194134,
+      "t"
+    ],
+    [
+      0.220752,
+      "\r\n"
+    ],
+    [
+      0.002272,
+      "注销\r\n"
+    ]
+  ]
+}

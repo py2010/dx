@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guacamole connection</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/sweetalert/sweetalert2.min.css' %}">
+    <style>
+        body {
+            padding:0;  /*去除内边距*/
+            border:0;   /*去除边框*/
+            margin:0;   /*去除外边距*/
+        }
+    </style>
+</head>
+<body>
+
+<!--<h1>Guacamole Remote Desktop</h1>-->
+<script src="{% static  'js/jquery-3.1.1.min.js' %}"></script>
+<!-- Guacamole -->
+<script type="text/javascript" src="{% static 'plugins/guacamole/1.2.0/guacamole-common.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'plugins/mousetrap/mousetrap.min.js' %}"></script>
+<script type="text/javascript" src="https://www.jq22.com/demo/FileSaver20161213/FileSaver.min.js"></script>
+<!-- <script type="text/javascript" src="{% static 'plugins/clipboard.js/clipboard.min.js' %}"></script> -->
+
+<!-- Display -->
+<div id="display">
+</div>
+<!-- Init -->
+<script type="text/javascript">
+
+    // Get display div from document
+    var display = document.getElementById("display");
+
+    // Instantiate client, using an HTTP tunnel for communications.
+    //http://guacamole.apache.org/doc/guacamole-common-js/Guacamole.WebSocketTunnel.html
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var ws_path = ws_scheme + '://' + window.location.host + '/guacamole/{{ hostid }}/{{ uid }}/';
+
+    console.log(ws_path);
+    var tunnel = new Guacamole.WebSocketTunnel(ws_path);
+    // console.log(tunnel, 22222222);
+    var guac = new Guacamole.Client(
+       // new Guacamole.HTTPTunnel("tunnel")
+        tunnel
+    );
+    // http://guacamole.apache.org/doc/guacamole-common-js/Guacamole.Client.html
+    // console.log(guac);
+
+    // Add client to display div
+    display.appendChild(guac.getDisplay().getElement());
+
+    // Error handler
+    guac.onerror = function(error) {
+        console.log(error);
+    };
+
+    // Connect
+    guac.connect('');
+
+    // Disconnect on close
+    window.onunload = function() {
+        guac.disconnect();
+    }
+
+
+    // RDP服务端文件/文件夹下载.
+    // 官方jsp客户端是另建后端API接口进行传送, blob为空 "4.blob,1.0,0.;".
+    // 这里使用ws客户端方式blob传输数据, 不再另建后端API接口, 录像中会自动去除文件blob.
+    // 官方不使用blob方式, 估计是因为转base64数据变大, 更关键的是blob下载时,
+    // 只有当文件完全传输到客户端结束后, 才弹出下载/保存,
+    // 如果是下载大文件, 需先传输到堡垒机(有界面进度条),
+    // 再从堡垒机到客户端/(base64)时间更长(无界面交互, 需自行增加),
+    // 导致客户端容易认为没反应/重复操作!
+    function loading(msg){
+        // (堡垒机<==>客户端)上传/下载过程中, 增加界面提示
+        swal({ 
+            title: msg, 
+            text: "您可以关闭当前提示, 数据传输不受影响继续在后台进行..",
+            type: 'info',
+            // timer: 8000,
+            confirmButtonText: "我知道了",
+            // showConfirmButton: false
+        })
+    }
+    guac.onfile = function(stream, mimetype, filename){
+        // 如果下载文件夹, 则为多次调用当前函数下载多个文件
+        stream.sendAck('OK', Guacamole.Status.Code.SUCCESS);  // 告知收到流
+        // 将从流中读取blob数据
+        reader = new Guacamole.BlobReader(stream, mimetype);
+        // (堡垒机==>客户端)下载中, 增加界面提示
+        var timeout = setTimeout(
+            'loading("正从堡垒机下载('+filename+')文件....")',
+            2000
+        );
+        reader.onend = function() {
+            // blob读取结束
+            clearTimeout(timeout);
+            swal.close(); //客户端已下载结束, 关闭界面提示
+            var blob_data = reader.getBlob();  // 文件数据(blob类型)
+            saveAs(blob_data, filename);  // 利用FileSaver.js保存blob为文件
+        };
+    }
+
+    // 将文件拖拽上传到RDP服务端 \\tsclient\映射盘\
+    document.ondragover = function(event){
+        // 拖拽文件到窗口, 进行拦截, 使浏览器不提示打开/下载
+        return false;
+    };
+    document.ondrop = function(event){
+        // 将客户端文件拖拽下载到堡垒机 (conf.py中GUACD['drive_path']配置的虚拟盘)
+
+        for (i=0; i<event.dataTransfer.files.length; i++) {
+            var file = event.dataTransfer.files[i]
+            // console.log(file);
+            var stream = guac.createFileStream(file.type, file.name);
+            console.log(stream.onack);
+            var writer = new Guacamole.BlobWriter(stream);
+            // 大文件上传时, 增加提示
+            var timeout = setTimeout(
+                'loading("正在上传('+file.name+')文件到堡垒机....")',
+                2000
+            );
+            writer.sendBlob(new Blob([file]));
+            writer.oncomplete = function() {
+                // blob写入结束
+                writer.sendEnd();
+                clearTimeout(timeout);
+                swal({ 
+                    title: file.name+"成功上传到虚拟盘, 请打开映射盘/刷新查看",
+                    type: 'info',
+                    position: 'top',
+                    timer: 4000,
+                    toast: true,
+                    // showConfirmButton: false
+                })
+            };
+        }
+
+        // 拖拽文件到窗口, 进行拦截, 使浏览器不提示打开/下载
+        return false;
+
+    };
+
+
+    // 剪切板: RDP服务端 ==>> 浏览器客户端
+    guac.onclipboard = function(stream, mimetype) {
+        var reader;
+        // If the received data is text, read it as a simple string
+        if (/^text\//.exec(mimetype)) {
+
+            reader = new Guacamole.StringReader(stream);
+
+            // Assemble received data into a single string
+            var data = '';
+            reader.ontext = function(text) {
+                // 从RDP服务端获取剪切板/复制文本
+                data += text;
+            };
+            // Set clipboard contents once stream is finished
+            reader.onend = function() {
+                // 将RDP中获取的文本更新到客户端剪切板
+                const input = document.createElement('textarea');
+                document.body.appendChild(input);
+                input.textContent=data;
+                input.select();
+                document.execCommand("Copy"); // 浏览器执行复制命令
+                document.body.removeChild(input);
+            };
+
+        }
+
+        // Otherwise read the clipboard data as a Blob
+        else {
+            reader = new Guacamole.BlobReader(stream, mimetype);
+            reader.onend = function() {
+                // blob数据(一般为图片)复制到客户端剪切板
+                var blob_data = reader.getBlob();
+                console.log(blob_data);
+                // Chrome只有复制文本才触发当前函数, 其它不触发, 原因不明.
+            };
+        }
+
+    };
+
+    // // 剪切板: 浏览器客户端 ==>> RDP服务端 (js安全限制, 非加密http无法读取剪贴板)
+    // document.onkeydown=function(event){
+    //     // 监视按键 ctrl + v 粘贴
+    //     var keyNum = window.event ? event.keyCode :event.which; 
+    //     if( event.ctrlKey && keyNum == 86){
+    //         console.log('cv.');
+    //         let data = '粘贴测试..';
+    //         var writer = new Guacamole.StringWriter(
+    //             guac.createClipboardStream("text/plain")
+    //         );
+    //         writer.sendText(data);
+    //         writer.sendEnd();
+    //     }
+    // };
+
+    var ws_conning = false;
+    function reconnect(title){
+        if (! title) {title='连接已中断!'}
+        swal({
+          title: title,
+          text: "是否重连?",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: '重连',
+          cancelButtonText: '取消'
+        }).then((result) => {
+          if (result.value) {
+            document.location.reload();
+          }
+        })
+    }
+    //state change
+    tunnel.onstatechange = function(state){
+        //var STATE_CONNECTED     = 1;
+        //var STATE_DISCONNECTED  = 2;
+        if (state == 1){
+            ws_conning = true;
+        } else if (ws_conning && state == 2){
+            reconnect(title='连接被管理员中止?!');
+        }
+    }
+    guac.onstatechange = function(state){
+        //alert closed
+        //var STATE_IDLE          = 0;
+        //var STATE_CONNECTING    = 1;
+        //var STATE_WAITING       = 2;
+        //var STATE_CONNECTED     = 3;
+        //var STATE_DISCONNECTING = 4;
+        //var STATE_DISCONNECTED  = 5;
+
+        if (state == 5){
+            reconnect();
+        }else if (state == 3){
+            console.log(guac.getDisplay.size);
+            guac.sendSize(window.innerWidth-10, window.innerHeight-60);
+            $(window).resize(function(){
+                guac.sendSize(window.innerWidth-10, window.innerHeight-60);
+
+            });
+        }
+    }
+
+    // 传送鼠标动作
+    var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
+    mouse.onmousedown =
+    mouse.onmouseup   =
+    mouse.onmousemove = function(mouseState) {
+        guac.sendMouseState(mouseState);
+    };
+
+    // 传送键盘动作
+    var keyboard = new Guacamole.Keyboard(document);
+    keyboard.onkeydown = function (keysym) {
+        guac.sendKeyEvent(1, keysym);
+    };
+    keyboard.onkeyup = function (keysym) {
+            guac.sendKeyEvent(0, keysym);
+    };
+
+    // 剪切板: textarea文本 ==>> RDP服务端
+    Mousetrap.bind(
+        ['ctrl+shift+alt', 'ctrl+alt+shift', 'shift+alt+ctrl'],
+        function(e) {
+            var data = '';
+            swal({
+              title: '剪贴板',
+              input: 'textarea',
+              confirmButtonText: '复制到远程剪贴板',
+              inputValue: data,
+            }).then(function(result){
+                if (result.value){
+                    // 将数据发给RDP剪贴板
+                    var data = result.value;
+                    if (data != undefined){
+                        var stream = guac.createClipboardStream("text/plain");
+                        var writer = new Guacamole.StringWriter(stream);
+                        writer.sendText(data);
+                        writer.sendEnd();
+                    }
+                }else if (result.dismiss === swal.DismissReason.cancel) {
+                    console.log(result.value);
+              }
+
+            })
+        }
+    );
+
+
+</script>
+
+</body>
+</html>

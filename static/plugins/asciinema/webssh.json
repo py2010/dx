@@ -1,0 +1,78 @@
+{
+  "width": 90, 
+  "version": 1, 
+  "command": "/bin/bash", 
+  "env": {
+    "TERM": "xterm", 
+    "SHELL": "/bin/bash"
+  }, 
+  "title": null, 
+  "duration": 6.165062, 
+  "stdout": [
+    [
+      6.7e-05, 
+      "Last login: Wed Jun  6 13:51:54 2018 from 192.168.80.238\r\r\n\u001b]0;root@centos7:~\u0007\u001b[?1034h[root@centos7 ~]# "
+    ], 
+    [
+      2.217719, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.505775, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.101201, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.100972, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.101795, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.101243, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.106072, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.101183, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# \r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.002289, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      0.101684, 
+      "\r\n\u001b]0;root@centos7:~\u0007[root@centos7 ~]# "
+    ], 
+    [
+      2.017417, 
+      "e"
+    ], 
+    [
+      0.303097, 
+      "x"
+    ], 
+    [
+      0.101009, 
+      "i"
+    ], 
+    [
+      0.100976, 
+      "t"
+    ], 
+    [
+      0.1, 
+      "\r\n\u8fde\u63a5\u7ed3\u675f...\r\n"
+    ]
+  ], 
+  "height": 32
+}

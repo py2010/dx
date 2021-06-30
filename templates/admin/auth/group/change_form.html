@@ -1,0 +1,17 @@
+{% extends 'admin/change_form.html' %}
+
+{% block admin_change_form_document_ready %}
+
+    {% block object-tools %}
+        {% if object_id %}
+        <ul class="object-tools">
+            <li>
+                <a href="{% url 'cmdb:usergroup_edit' object_id %}" target="_blank">主机操作 - 主机清单</a>
+            </li>
+        {{ block.super }}
+            
+        </ul>
+        {% endif %}
+    {% endblock %}
+
+{% endblock %}

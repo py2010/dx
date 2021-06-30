@@ -1,0 +1,14 @@
+
+{% for menu in menus %}
+
+<li class="">
+    <a><i class="{{ menu.class }}"></i> <span class="nav-label">{{ menu.menu_1 }}</span>
+        <span  class="fa arrow"> </span></a>
+    <ul class="nav nav-second-level">
+        {% for submemu in menu.submemus %}
+        <li  class="\{\{  \}\}"><a href="{{ submemu.url|safe }}" target="_blank">{{ submemu.menu_2 }}</a></li>
+        {% endfor %}
+
+    </ul>
+</li>
+{% endfor %}

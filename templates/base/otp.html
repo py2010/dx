@@ -1,0 +1,23 @@
+{% extends "base/login.html" %}
+
+            {% block content %}
+            <p>用户({{ user }}) OTP验证</p>
+            {% if show_otp %}
+            <img src="data:image/png;base64,{{ base64_data }}"><br/>
+            <p>首次登陆？<br/>请使用手机otp工具(比如freeotp等)<br/>扫描二维码，
+            若是Google Authentication则可输入“<span style="color: red;">{{ secret.0 }}</span>”，
+            将获取的t-otp验证码输入下框中验证</p>
+            {% endif %}
+            <div class="form-group">
+                <input type="text"  name="totp" class="form-control" placeholder="T-otp验证" required>
+            </div>
+            <div class="form-inline">
+                <button type="submit" class="btn btn-primary">验证</button>
+                <a class="btn btn-info btn-outline col-sm-offset-1" href="/logout">取消</a>
+            </div>
+            <span> 注意：otp验证客户端，比如手机时间必需和网站服务器时间一致，每间隔30秒刷新一次</span><br>
+            <span style="color: red;"> {{ error_msg|safe }}</span><br>
+            {% endblock %}
+
+
+

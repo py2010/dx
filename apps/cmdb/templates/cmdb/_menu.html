@@ -1,0 +1,63 @@
+
+{% comment help %} 
+
+    {% show_menu_url '网址视图' '权限码1' 'and' '权限码2' as url_xx项 %}
+    多个权限未提供逻辑与或时, 默认为or, 也就是'or' 可以省略.
+
+{% endcomment %}
+
+
+            {% show_menu_url 'cmdb:hostgroup_list' 'cmdb.view_hostgroup' as hostgroup %}
+            {% show_menu_url 'cmdb:host_list' 'cmdb.view_host' as host %}
+            {% show_menu_url 'cmdb:hostuser_list' 'cmdb.view_hostuser' as hostuser %}
+            {% show_menu_url 'cmdb:perm_list' 'cmdb.view_perm' as perm %}
+
+            {% if hostgroup or host or hostuser or perm %}
+            <li>
+                <a><i class="fa fa-server"></i> <span class="nav-label">资产管理</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+
+                    {% if hostgroup %}
+                    <li><a href="{{ hostgroup }}">机组</a></li>
+                    {% endif %}
+
+                    {% if host %}
+                    <li><a href="{{ host }}">主机</a></li>
+                    {% endif %}
+
+                    {% if hostuser %}
+                    <li><a href="{{ hostuser }}">主机用户</a></li>
+                    {% endif %}
+
+                    {% if perm %}
+                    <li><a href="{{ perm }}">主机授权</a></li>
+                    {% endif %}
+
+                </ul>
+            </li>
+            {% endif %}
+
+
+            {% show_menu_url 'cmdb:term' 'cmdb.ssh_host' as term  %}
+            {% show_menu_url 'cmdb:session' 'cmdb.play_session' as session  %}
+
+            {% if term or session %}
+            <li>
+                <a><i class="fa fa-desktop"></i> <span class="nav-label">终端操作</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+
+                    {% if term %}
+                    <li class="{% if request.path == term %}active{% endif %}"><a href="{{ term }}">终端登陆</a></li>
+                    {% endif %}
+
+                    {% if session %}
+                    <li class="{% if request.path == session %}active{% endif %}"><a href="{{ session }}">终端日志</a></li>
+                    {% endif %}
+
+                </ul>
+            </li>
+            {% endif %}
+
+

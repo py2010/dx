@@ -1,0 +1,90 @@
+{% load cache %}
+
+{%  load_menus as menus %}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                <span><img alt="image" class="img-circle" src="/static/img/profile_small.jpg"></span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs"> <strong class="font-bold">{{ request.user }}</strong>
+
+                        </span>
+                        <span class="text-muted text-xs block">
+                            {% if request.user.is_superuser %}
+                            管理员 {% elif request.user.is_authenticated %}普通用户{% else %}访客{% endif %}
+                            <b class="caret"></b></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        {% if request.user.is_authenticated %}
+                        <li><a href="/password_change/" target="_blank">修改密码</a></li>
+                        <li><a href="{% url 'logout' %}">登出</a></li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}">登入</a></li>
+                        {% endif %}
+                    </ul>
+
+                </div>
+                <div class="logo-element">
+                    CMDB
+                </div>
+            </li>
+            <li>
+                <a href="/"><i class="fa fa-home"></i> <span class="nav-label">首页</span>
+                   </a>
+
+            </li>
+
+            {#% cache 20 left_menus %#}
+
+            {% for key, val in menus.items %}
+                {% if key.0 == 1 %}
+                    {# app为一级菜单, 直接装载app的菜单html #}
+                    {% for html in val %}{% include  html %}{% endfor %}
+                {% else %}
+                    <!-- {# app为二级菜单, 先生成一级菜单, 再装载app的菜单html #} -->
+                    <li class="">
+                        <a><i class="fa fa-calendar"></i> <span class="nav-label">{{ key.1 }}</span>
+                            <span  class="fa arrow"> </span></a>
+                        <ul class="nav nav-second-level">
+                        {% for html in val %}{% include  html %}{% endfor %}
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+
+            {% endfor %}
+
+
+
+            {% comment help %} 
+            {% if request.user.is_staff %}
+            <li class="landing_link">
+                <a><i class="fa fa-database"></i> 
+                    <span class="nav-label">后台管理</span>
+                    <span  class="label label-warning pull-right">Django</span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/admin/" target="_blank">后台主页</a></li>
+
+                    <li><a href="/admin/auth/user/" target="_blank">网站用户</a></li>
+
+                    <li><a href="/admin/cmdb/hostuser/" target="_blank">SSH用户</a></li>
+                </ul>
+            </li>
+            {% endif %}
+
+            {% endcomment %}
+
+            {#% endcache %#}
+
+        </ul>
+
+    </div>
+</nav>
+
+

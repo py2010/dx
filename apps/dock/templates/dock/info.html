@@ -1,0 +1,67 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}Docker信息{% endblock %}
+
+{% block left %}
+    {% include "base/_left.html" with cmdb_docker_host_active="active" %}
+{% endblock left %}
+
+
+{% block page-content %}
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>资产管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                <li>
+                    <a href="{% url 'dock:docker_host_list' %}">Docker管理</a>
+                </li>
+                <li class="active">
+                    <strong>Docker信息</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{ dk }}</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <textarea id="detail" readonly="readonly" style="width:100%;" rows="50">{{ text }}</textarea>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+
+{% block footer-js %}
+
+    <script>
+        var json = $('#detail').val();
+        var result = JSON.stringify(JSON.parse(json), null, 4);
+        $('#detail').val(result);
+    </script>
+
+
+{% endblock footer-js %}
+

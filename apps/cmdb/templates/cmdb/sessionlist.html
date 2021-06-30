@@ -1,0 +1,280 @@
+{% extends "base/_base.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block  title %}终端日志列表{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'plugins/bootstrap-dialog/css/bootstrap-dialog.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/asciinema/asciinema-player.css' %}">
+{% endblock header %}
+
+{% block left %}
+    {% include "base/_left.html" with cmdb_session_active="active" %}
+{% endblock left %}
+
+
+
+{% block page-content %}
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>资产管理</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">主页</a>
+                </li>
+                <li>
+                    终端管理
+                </li>
+                <li class="active">
+                    <strong>终端操作回放</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="row col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>终端登陆日志</h5>
+
+                </div>
+                <div class="ibox-content">
+                    {% if error %}
+                    {{ error }}
+                    {% endif %}
+                    <table class="table table-striped table-bordered table-hover" id="tb_session">
+                        <thead>
+                            <tr>
+                                <th>主机</th>
+                                <th class="col-xs-2">终端用户</th>
+                                <th class="col-xs-2">人员</th>
+                                <th class="col-xs-1">类型</th>
+                                <th class="col-xs-2">开始时间</th>
+                                <th class="col-xs-2">结束结束</th>
+                                <th class="col-lg-3">命令列表</th>
+                                <th class="col-xs-1">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for o in object_list %}
+                            <tr>
+                                <td>{{ o.host }}</td>
+                                <td>{{ o.host_user }}</td>
+                                <td>{{ o.http_user }}</td>
+                                <td>{{ o.get_type_display }}</td>
+                                <td>{{ o.start_time }}</td>
+                                <td>{{ o.end_time }}</td>
+                                <td>{{ o.cmds|linebreaks }}</td>
+
+                                <td id="{{ o.id }}">
+                                    {% if o.end_time %}
+                                    <button type="button" class="btn btn-success btn-xs" id="{{ o.log }}">播放</button>
+                                    {% else %}<!--webssh-->
+                                    <button type="button" class="btn btn-info btn-xs" id="{{ o.log }}">监视</button>
+                                    <button type="button" class="btn btn-warning btn-xs">结束</button>
+
+                                    {% endif %}
+                                    <a class="btn btn-danger btn-xs">删除</a>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+
+{% block footer-js %}
+
+<script src="{% static 'plugins/bootstrap-dialog/js/bootstrap-dialog.js' %}"></script>
+<script src="{% static 'plugins/asciinema/asciinema-player.js' %}"></script>
+
+<script src="{% static 'js/my.js' %}"></script>
+
+
+<script type="application/javascript">
+    $(function () {
+
+        $('.btn-danger').click(function () {
+            // 删除model表obj数据
+            console.log(this, 44444444)
+            DeleteObj(this, this.parentNode.id)
+        });
+
+    });
+
+    function kill_session(logid) {
+        // 强制中止在线的终端/远程桌面/VNC
+
+        $.ajax({
+            url: "{% url 'cmdb:session_kill' %}/",
+            type: 'POST',
+            data: {'logid': logid, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            error: function(){
+                alert("强制中止终端失败！");
+            },
+            success: function (data) {
+                alert("已成功发送了中止指令。。");
+            }
+
+        })
+    }
+
+
+
+    $( ".btn-success, .btn-info, .btn-warning" ).click(function (){
+        console.log($(this));
+        console.log(this.log);
+        console.log(this.parentNode.id);
+        var host = this.parentNode.parentNode.children[0].textContent;
+        var user = this.parentNode.parentNode.children[1].textContent;
+        var start_time = this.parentNode.parentNode.children[2].textContent;
+        var id = this.parentNode.id;
+
+        var div_username = 'User: '+'<span class="text-info">'+user+'' + '</span> ';
+        var div_host = 'Host: '+'<span class="text-info">' + host + '</span> ';
+        var div_time = 'Start: ' + '<span class="text-info">'+start_time +'</span> ';
+        var title = div_username + div_host + div_time;
+
+        if (this.className=="btn btn-success btn-xs") {
+            // 回放
+            var log_type;
+            var index = this.id.lastIndexOf(".");
+            var ext = this.id.substr(index+1);
+            if (ext=='json') {
+                // asciinema操作日志
+                var logurl = '/media/sshreplay/' + this.id;
+                // console.log(logurl);
+                var message = "<asciinema-player src='"+logurl+"'></asciinema-player>"
+                var size=BootstrapDialog.SIZE_NORMAL;
+            } else {
+                // guacamole图形录像
+                var logurl = "guacamole/replay/" + id;
+                // console.log(logurl);
+                var message = $('<div style="overflow: auto;background-color: rgba(0, 0, 0, 0);"></div>').load(logurl);
+                var size=BootstrapDialog.SIZE_WIDE;
+            }
+        } else if (this.className=="btn btn-info btn-xs") {
+            // 监视
+            var log_type;
+            var index = this.id.lastIndexOf(".");
+            var ext = this.id.substr(index+1);
+            if (ext=='json') {
+                // asciinema操作日志
+                var monurl = "{% url 'cmdb:sshmonitor' '' %}" + id;
+                var message = $('<div style="overflow: auto;background-color: rgba(0, 0, 0, 0);"></div>').load(monurl);
+            } else {
+                // guacamole图形录像
+                var monurl = "guacamole/monitor/" + id;
+                var message = $('<iframe src="' + monurl +'" frameborder="0" scrolling="no" onload="this.height=600;this.width=800;"></iframe>')
+            }
+
+            var size=BootstrapDialog.SIZE_WIDE;
+        } else {
+            // 强制结束
+            if(! window.confirm('确定要强制结束用户当前连接中的终端？')){
+                return false;
+            }
+            kill_session(id);
+            return false;
+        }
+
+        var cssclass='primary-default';
+
+        BootstrapDialog.show({
+            title: title,
+            type: BootstrapDialog.TYPE_DEFAULT,
+            message: message,
+            size:size,
+            draggable: true,
+            cssClass: cssclass,
+        });
+        // return false;
+
+    });
+
+</script>
+
+
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function () {
+
+        $('#tb_session').DataTable({
+
+            "oLanguage": {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "对不起，查询不到任何相关数据",
+                "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_条记录",
+                "sInfoEmtpy": "找不到相关数据",
+                "sInfoFiltered": " 数据表中共为 _MAX_ 条记录",
+                "sProcessing": "正在加载中...",
+                "sSearch": "搜索",
+                "oPaginate": {
+                    "sFirst": "第一页",
+                    "sPrevious": " 上一页 ",
+                    "sNext": " 下一页 ",
+                    "sLast": " 最后一页 "
+                }
+            },
+            "order": [[4, 'desc']],
+            columnDefs: [{
+                'targets': [0],    //都默认不排序
+                'orderable': false,
+                'orderData': [ 4, 0 ] //第1列排再按第二列排
+            }],
+
+
+            dom: '<"html5buttons"B>lTfgitp,',
+
+            buttons: [
+                    {extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ],
+            lengthMenu: [[20,], [20,]],
+            iDisplayLength: 20,
+            // bLengthChange: false, //去掉每页条数
+            // bFilter: false, //去掉搜索框
+        });
+
+
+    });
+
+    // parent.window.setIframeHeight();  
+</script>
+
+
+{% endblock footer-js %}
+
+

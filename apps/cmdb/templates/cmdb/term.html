@@ -1,0 +1,966 @@
+{% extends 'base/_base.html'%}
+{% load staticfiles %}
+{% block title %}终端操作{% endblock %}
+
+
+{% block header %}
+
+<!--
+    主机资产远程操作: SSH/RDP/VNC
+    SSH支持三种方式连接:
+        1. 堡垒机支持的软件终端, 比如Xshell连接堡垒机
+        2. 网页终端 (后端处理和堡垒机程序一致)
+        3. guacamole方式的ssh(网页)终端, 和远程桌面/VNC的图形录像一样, 回放文件很大.
+    RDP/VNC目前只有guacamole网页方式连接.
+-->
+
+
+
+    <link rel="stylesheet" href="{% static 'xterm/xterm.css' %}"/>
+    <!-- proton不支持search.show_only_matches样式隐藏未匹配节点 -->
+    <!-- <link rel="stylesheet" href="{% static 'jstree/themes/proton/style.min.css' %}"/> -->
+    <link rel="stylesheet" href="{% static 'jstree/themes/default/style.min.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/jquery-ui/jquery-ui.css'%}">
+    {# ※※※※◆jquery-ui需要在elfinder上方◆※※※※ #}
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/elfinder/css/elfinder.full.css'%}">
+{% endblock header %}
+
+
+
+{% block page-content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="portlet box box-success ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <a class="text-danger">主机列表</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row" style="margin-left: 10px;">
+                    <input type="search" id="jstree_q" class="col-sm-8" placeholder="search"/>
+                </div>
+                <div id="server_list" class="tree-demo" role="tree"></div>
+                <div style="margin-top: 30px;">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+
+        <div class="span2 leftMenu">
+            <ul class="nav nav-tabs marginBottom" id="myTab">
+                <li class="active ">
+                    <a href="#help" class="backgroundRed">帮助信息<button class="close closeTab" type="button" >×</button></a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content span4">
+            <div class="tab-pane active" id="help">
+            {% if windows %}
+                <pre>
+                Windows客户端使用xshell配置说明:
+                1.修改最后一行为你自身的xshell.exe路径，比如C:\Xshell+Xftp\Xshell.exe;
+                2.保存并导入xx.reg文件到注册表。
+                3.建议使用xshell6，Xftp选项卡名称自动和Xshell保持一致。
+--------------------------------------------------------------
+Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\ssh]
+@="URL:CMDB Loader Protocol"
+"URL Protocol"=""
+[HKEY_CLASSES_ROOT\ssh\DefaultIcon]
+@=""
+[HKEY_CLASSES_ROOT\ssh\shell]
+@="open"
+[HKEY_CLASSES_ROOT\ssh\shell\open]
+[HKEY_CLASSES_ROOT\ssh\shell\open\command]
+@="\"C:\\Xshell+Xftp\\Xshell.exe\" \"%1\""
+--------------------------------------------------------------
+                </pre>
+                下载*.reg示例（<a href="/static/xterm/cmdb_ssh.reg" target="_blank">cmdb_ssh.reg</a>）
+            {% else %}
+                <pre>
+            Linux客户端kde桌面使用SecureCRT配置说明:
+            1.下载下面的cmdb_secure.zip;
+            2.解压，打开ssh和sftp的.desktop看一下有没需修改的地方;
+            3.将解压得到的二个.desktop复制到/usr/share/applications/目录中;
+            4.执行update-desktop-database命令刷新desktop库;
+            5.有些Linux系统可能要执行以下命令才支持网页调用
+xdg-mime default cmdb_ssh.desktop x-scheme-handler/ssh
+xdg-mime default cmdb_sftp.desktop x-scheme-handler/sftp
+            6.好了，可以从网页调用SecureCRT和FX了.
+                </pre>
+                下载*.desktop示例（<a href="/static/xterm/cmdb_secure.zip" target="_blank">cmdb_secure.zip</a>）
+            {% endif %}
+            </div>
+        </div>
+        <div style="margin-top: 30px;">&nbsp;</div>
+
+    </div>
+</div>
+
+
+{#% verbatim %#}
+<div id="app">
+
+        <el-dialog title="该主机有多个终端用户 - 请选择登入"
+         :visible.sync="dialogTableVisible" width="30%"
+         :append-to-body="true" :modal-append-to-body="false">
+          <el-table :data="host_users">
+            <el-table-column property="id" label="id" width="60"></el-table-column>
+            <el-table-column property="username" label="用户名" width="120"></el-table-column>
+            <!-- <el-table-column property="changetime" label="最后修改" width="200"></el-table-column> -->
+            <el-table-column label="操作" width="120">
+                <template slot-scope="scope">
+                    <el-link type="success" @click="set_uid(scope.row)">登入</el-link>
+                </template>
+            </el-table-column>
+            
+          </el-table>
+        </el-dialog>
+
+</div>
+{#% endverbatim %#}
+
+
+
+ <!-- 用于跳转到xshell -->
+<!-- <iframe id="clissh_frame" width="400" height="400" src="" marginheight="0" marginwidth="0" frameborder="0" scrolling="no"></iframe>  -->
+
+{% endblock page-content %}
+
+{% block footer-js %}
+<script src="{% static 'xterm/xterm.js' %}"></script>
+<script src="{% static 'xterm/addons/fit/fit.js' %}"></script>
+<script src="{% static 'xterm/addons/terminado/terminado.js' %}"></script>
+<script src="{% static 'xterm/addons/fullscreen/fullscreen.js' %}"></script>
+<script src="{% static 'jstree/jstree.js' %}"></script>
+
+<!-- elFinder JS (REQUIRED) -->
+<script src="{% static 'plugins/elfinder/js/elfinder.full.js'%}"></script>
+<script src="{% static 'plugins/jquery-ui/jquery-ui.js'%}"></script>
+
+<script type="application/javascript">
+
+
+    //initilize tabs
+    $(function () {
+
+        //when ever any tab is clicked this method will be call
+        $("#myTab").on("click", "a", function (e) {
+            e.preventDefault();
+            // console.log(e);
+            $(this).tab('show');
+
+            // 设置网页标题和网址
+            var tabContentId = $(this).attr("href");
+            var tabContentTxt = $(this).text();
+            // console.log($(this));
+
+            document.title = tabContentTxt.slice(0,-1);
+            window.history.pushState({},0,'http://'+window.location.host+window.location.pathname+tabContentId);
+            console.log($(this))
+        });
+
+
+        //registerComposeButtonEvent();
+        registerCloseEvent();
+
+    });
+
+
+    //this method will register event on close icon on the tab..
+    function registerCloseEvent() {
+
+        $(".closeTab").click(function () {
+            //关闭tab
+            var tabContentId = $(this).parent().attr("href");
+            console.log(tabContentId);
+            // return false;
+            $(this).parent().parent().remove(); //tab标签
+            $(tabContentId).remove(); //tab终端窗口
+            $('#myTab a:last').tab('show'); // Select first tab
+
+            let ids = tabContentId.split('_');
+            console.log(ids);
+
+            term=ids[0].replace("#",'');
+            type=ids[1];
+            hostid=ids[2];
+            uid=ids[3];
+            if (term=='web' & type=='ssh') {
+                let index=hostid+'_'+uid;
+                let ws=wss[index];
+                // console.log(ws);
+                if(ws && ws.readyState==1){
+                    // 断开ws连接
+                    ws.send('["close"]');
+                    delete wss[index];
+                }
+            }
+
+
+        });
+    }
+
+
+    //shows the tab with passed content div id..paramter tabid indicates the div where the content resides
+    function showTab(tabId) {
+        $('#myTab a[href="#' + tabId + '"]').tab('show');
+    }
+
+
+</script>
+<script type="application/javascript">
+    $(function () {
+        // Terminal.applyAddon(fullscreen);
+        Terminal.applyAddon(fit);
+    });
+
+
+    var wss = {}; // 收集所有host_ws，用于关闭
+    // var time=Date.parse(Date());
+    // function chktime(minout) {
+    //     // webssh保持连接
+    //     now=Date.parse(Date());
+    //     var min=(now-time)/1000/60;
+    //     time=now;
+    //     if (min<minout) {
+    //         return 0;
+    //     }else{
+    //         return 1;
+    //     }
+    // }
+    // sec=(Date.parse(Date())-time)/1000;
+    function sleep(s) {
+        // 延时秒数，async function中使用await sleep(1);
+        return new Promise(resolve => setTimeout(resolve, s*1000))
+    }
+    function make_terminal(element, size, ws_url,hostid,uid) {
+        var term = new Terminal({
+            cols: size.cols,
+            rows: size.rows,
+            screenKeys: true,
+            useStyle: true,
+            fontSize:14,
+            // cursorBlink: false,  // Blink the terminal's cursor
+            // debug: true,
+        });
+        term.open(element, false);
+        term.fit();
+        // term.toggleFullScreen(true);
+
+        var ws = new WebSocket(ws_url);
+        wss[hostid+'_'+uid] = ws;
+        // console.log(wss);
+        ws.onopen = function (event) {
+            ws.send(JSON.stringify(["connect", hostid, uid]));
+            //set terminal width and height
+            <!--ws.send(JSON.stringify(["set_size", size.rows, size.cols,-->
+                <!--window.innerHeight, window.innerWidth]));-->
+            term.on('data', async function (data) {
+                if(ws.readyState==1){
+                    // await sleep(0.05); // 设置延时，以防按键过快而输出慢，导致命令审计处理复杂
+                    ws.send(JSON.stringify(['stdin', data]));
+                    // ws.send(JSON.stringify(['stdin', 'ls\n']))
+                    // console.log(data);
+                }
+
+            });
+
+            term.on('title', function (title) {
+                document.title = title;
+            });
+
+
+            ws.onmessage = function (event) {
+                json_msg = JSON.parse(event.data);
+                switch (json_msg[0]) {
+                    case "stdout":
+                        term.write(json_msg[1]);
+                        break;
+                    case "disconnect":
+                        term.write("\r\n\r\n[WebSocket关闭...]\r\n");
+                        ws.close();
+                        // console.log(ws);
+                        break;
+                }
+            };
+        };
+        return {socket: ws, term: term};
+    }
+
+
+</script>
+
+
+<script type="application/javascript">
+    $("#server_list").jstree({
+        core: {
+            themes: {
+                // 'name': 'proton',
+                'name': 'default',
+                // 'responsive': true
+            },
+            // check_callback: true,
+
+            data: [
+            {% for hostgroup in hostgroups%}
+                {
+                    // id: "{{ hostgroup.id }}",
+                    text: "{{ hostgroup.name }}", type:"folder",
+                    children: [
+                        {% for host in hostgroup.user_hosts %}
+                        {
+                            text: "{{ host.name }} ({{ host.ip }})",
+                            id: "{{ host.id }}",
+                            ip: "{{ host.ip }}",
+                            ssh: "{{ host.port_ssh }}",
+                            rdp: "{{ host.port_rdp }}",
+                            vnc: "{{ host.port_vnc }}",
+                        },
+                        {% endfor %}
+                    ]
+                },
+            {% empty %}
+                {text: "<主机组为空, 无任何机组授权?>"}
+            {% endfor %}
+            ]
+
+
+        },
+
+
+        types: {
+            default : {"icon" : "fa fa-laptop"},
+            folder: {icon: "fa fa-folder"},
+            file: {icon: "fa fa-laptop"},
+
+        },
+
+        plugins: [
+            //"dnd", 
+            "contextmenu", "types", "search",
+        ],
+
+
+        search: {
+            "show_only_matches": true, //搜索时只显示匹配，未匹配项隐藏
+            "show_only_matches_children": true, //搜索时只显示匹配，匹配组时显示组中子节点(不管子节点匹不匹配搜索)，false则无论父、子节点，都只显示匹配项。
+        },
+
+
+        contextmenu: {
+            "items": function ($node, cb) {
+                var tree = $("#server_list").jstree(true);
+                var term_args = {
+                    // 终端连接参数
+                    'hostid': $node.id,
+                    'hostinfo': $node.text,
+                };
+                // console.log($node, 888888);
+                var menu_ssh = {
+                    "xshell": {
+                        "label": "Xshell终端",
+                        "action": function (obj) {
+                            app.conn(term_args);
+                        }
+                    },
+                    "xftp": {
+                        "label": "Xftp文件",
+                        "action": function (obj) {
+                            term_args.type = 'sftp'
+                            app.conn(term_args);
+                        }
+                    },
+                    "webssh": {
+                        "label": "网页终端",
+                        "action": function (obj) {
+                            term_args.term = 'web'
+                            app.conn(term_args);
+                        }
+                    },
+                    "websftp": {
+                        "label": "网页SFTP",
+                        "action": function (obj) {
+                            term_args.term = 'web'
+                            term_args.type = 'sftp'
+                            app.conn(term_args);
+                        }
+                    },
+                    // "disconnect": {
+                    //     "separator_before": false,
+                    //     "separator_after": false,
+                    //     "label": "关闭终端",
+                    //     "action": function (obj) {
+                    //         $("#hostid_"+$node.id).remove();
+                    //         $('#myTab a[href="#hostid_'+$node.id+'"]').remove();
+                    //         $('#myTab a:last').tab('show'); // Select first tab
+                    //     }
+                    // },
+                };
+                var menu_rdp = {
+                    "webrdp": {
+                        "label": "远程桌面",
+                        "action": function (obj) {
+                            term_args.term = 'web'
+                            term_args.type = 'rdp'
+                            app.conn(term_args);
+                        }
+                    },
+                };
+                var menu_vnc = {
+                    "webvnc": {
+                        "label": "连接VNC",
+                        "action": function (obj) {
+                            term_args.term = 'web'
+                            term_args.type = 'vnc'
+                            app.conn(term_args);
+                        }
+                    },
+                };
+                var menu = {};
+                if ($node.original.ssh != '0')
+                    {menu = Object.assign({}, menu, menu_ssh);}
+                if ($node.original.rdp != '0')
+                    {menu = Object.assign({}, menu, menu_rdp);}
+                if ($node.original.vnc != '0')
+                    {menu = Object.assign({}, menu, menu_vnc);}
+                return menu
+            }
+        }
+    }).on('show_contextmenu.jstree', function(e, reference, element) {
+        if ( reference.node.parents.length < 2 ) {
+            $('.vakata-context').remove();
+        }
+    }).on("ready.jstree", function (e, data) {
+        // data.instance.open_all();
+        // console.log(data);
+        // URL直接打开终端
+
+        var tabContentId=window.location.hash;
+        let ids = tabContentId.split('_');
+        // console.log(ids);
+        // console.log(app.term_args, 444444444);
+
+        term=ids[0].replace("#",'');
+        type=ids[1];
+        hostid=ids[2];
+        uid=ids[3];
+        // console.log(hostid);
+        if (/^\d+$/.test(hostid)) {
+            // alert(hostid);
+            let tree = $("#server_list").jstree(true);
+            let hostinfo = tree.get_node(hostid).text
+            app.term_args.hostinfo = hostinfo
+
+            app.term_args.term = term
+            app.term_args.type = type
+            app.term_args.hostid = hostid
+            app.term_args.uid = uid
+            // console.log(hostinfo);
+            app.conn(app.term_args);
+            // console.log($("#14_anchor"));
+            // $("#"+hostid+"_anchor").addClass('jstree-clicked');
+        }
+
+    })
+    /*.on('move_node.jstree', function(e,data){
+        // 鼠标拖动事件
+        console.info(data);
+        jQuery.post("/cmdb/host_group",
+            {                    
+             id : data.node.id, 
+             parent : data.parent,
+             position:data.position,
+             old_parent:data.old_parent,
+             is_multi:data.is_multi,
+             },
+             function(data,status){                                        
+                 alert("Data: " + data + "\nStatus: " + status);
+             }, 'json');
+         
+    })*/
+/*    .bind('dblclick.jstree',function(e){
+        // 双击事件
+        // alert($(e.target).parents('li').attr('id'));
+        connect_webssh($(e.target).parents('li').attr('id'));
+    })*/
+
+    ;
+
+    $(function () {
+        var to = false;
+        $('#jstree_q').keyup(function () {
+            if(to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#jstree_q').val();
+                $('#server_list').jstree(true).search(v);
+            }, 250);
+        });
+
+    });
+
+
+
+</script>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+
+            dialogTableVisible: false,
+
+        },
+        created() {
+          this.init();
+        },
+        methods: {
+
+            init(term_args={}) {
+                this.host_users = [];
+                let init_term_args = {
+                    // 终端连接参数
+                    "term": 'cli',
+                    "type": 'ssh',
+                    "hostid": null,
+                    "uid": null,
+                    "hostinfo": 'host',
+                };
+                this.term_args = Object.assign({}, init_term_args, term_args);
+
+            },
+
+            check_host() {
+                if (! this.term_args.hostid) {
+                    this.$message.warning('请选择终端连接的主机.');
+                    throw "未选择主机";
+                    // return false
+                }
+                return true
+            },
+            async check_host_user() {
+                // 检查主机名下/协议类型, 有多少终端用户
+                // 当只有一个终端用户时, 直接进行连接, 但由于axios请求时需花费时间,
+                // 而axios由于只能异步请求, 无法同步执行, 会导致还在请求之中,
+                // 但同步函数中会直接执行后续判断uid为空, 导致未进行连接,
+                // 所以调用当前函数时, 需使用await同步等待
+                this.check_host();
+                if (! this.term_args.uid) {
+                    let protocol=this.term_args.type;
+                    if (protocol=='sftp') {
+                        protocol='ssh';
+                    }
+                    data={
+                        'hostid':this.term_args.hostid,
+                        'protocol':protocol,
+                    }
+
+                    await Requst(this,"",params={}, method="POST",data=data).then(r=>{
+                        // console.log(r);
+                        if (typeof(r) != "object") {
+                            this.$message.warning('数据异常, 不是json格式?');
+                        } else if (r.length > 1) {
+                            // 需手工选择终端用户
+                            this.host_users=r;
+                            this.dialogTableVisible = true;
+                        } else if (r.length == 1) {
+                            // 设置终端用户
+                            this.term_args.uid = r[0].id;
+                        } else if (r.length == 0) {
+                            this.$message.warning('主机未授权任何'+protocol+'用户?');
+                        }
+                    }).catch(error=>{
+                        this.$message.error("请求失败?");
+                    });
+
+                }
+
+
+            },
+            set_uid(u) {
+                // 主机有多个终端用户, 选择了其中一个进行连接
+                this.term_args.uid=u.id;
+                this.term_args.uname=u.username;
+                // let term = this.term_args.term;
+                this.conn();
+                this.dialogTableVisible = false;
+            },
+            async conn(term_args) {
+                // 连接执行主机操作, 如果主机有多个SSH用户,则需选择登入用户
+                if (term_args) this.init(term_args);
+                await this.check_host_user();  // 需等待同步完成后, 再进行下面判断.
+                // 已有终端参数, 执行连接
+                let func = this.term_args.term+'_'+this.term_args.type
+                console.log(func);
+                this[func]();
+            },
+
+            cli_ssh() {
+                // 连接软件终端
+                // console.log(this.term_args.uid, 7777777);
+                if (this.term_args.uid) {
+                    
+                    let url = '/cmdb/clissh/' + this.term_args.hostid;
+                    let params = {
+                        "type": this.term_args.type,
+                        "uid": this.term_args.uid,
+                    };
+
+                    return Requst(this,url,params=params).then(r=>{
+                        if (typeof(r) != "object") {
+                            // 转到软件终端
+                            window.location.href=r;
+                        }else if (r.length > 0) {
+                            // 选择终端用户
+                            // console.log(r);
+                            this.host_users=r;
+                            this.dialogTableVisible = true;
+                        } else {
+                            this.$message.warning('主机未授权任何终端用户?');
+
+                        }
+                    }).catch(error=>{
+                        this.$message.error("访问出现异常");
+                    });
+                }
+
+
+            },
+            cli_sftp() {
+                this.cli_ssh();
+            },
+
+            web_ssh() {
+                // 连接网页终端
+                let hostid = this.term_args.hostid
+                let hostinfo = this.term_args.hostinfo
+                let uname = this.term_args.uname
+                if (uname) hostinfo += (' - ' + uname);
+                let uid = this.term_args.uid
+                console.log(hostid, hostinfo);
+
+                if (uid) {
+                    var tabId = "web_ssh_"+hostid+"_"+uid;
+                    if ($("#"+tabId).length <= 0){
+                        $('.nav-tabs').append('<li><a href="#' + tabId + '">' + hostinfo + '<button class="close closeTab" type="button" >×</button></a></li>');
+                        $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
+                        showTab(tabId);
+                        registerCloseEvent();
+
+                        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+                        var ws_path = ws_scheme + '://' + window.location.host + '/webssh/';
+                        // console.log(ws_path);
+                        make_terminal(document.getElementById(tabId), {rows: 32, cols: 90}, ws_path, hostid, uid);
+                    }else {
+                        showTab(tabId);
+                    }
+
+                }
+
+            },
+
+            web_rdp() {
+                // 连接远程桌面
+                let hostid = this.term_args.hostid
+                let hostinfo = this.term_args.hostinfo
+                let uname = this.term_args.uname
+                if (uname) hostinfo += (' - ' + uname);
+                let uid = this.term_args.uid
+                console.log(hostid, hostinfo);
+
+                if (uid) {
+                    var tabId = "web_rdp_"+hostid+"_"+uid;
+                    if ($("#"+tabId).length <= 0){
+                        $('.nav-tabs').append('<li><a href="#' + tabId + '">' + hostinfo + '<button class="close closeTab" type="button" >×</button></a></li>');
+                        $('.tab-content').append('<div class="tab-pane responsive" id="' +tabId + '"><iframe src="/guacamole/'+hostid+'/'+uid+'/" frameborder="0" style="width: 100%;" scrolling="no" onload="this.height=780;this.height=this.contentWindow.document.documentElement.scrollHeight;this.contentWindow.focus();" onmouseover="this.contentWindow.focus();"></iframe>'+ '</div>');
+                        showTab(tabId);
+                        registerCloseEvent();
+                        console.log("Rdp and vnc protocol can use left ctrl+shift+alt shortcut to use clipboard function!");
+                    }else {
+                        showTab(tabId);
+                    }
+
+                }
+
+            },
+
+            web_vnc() {
+                // 连接VNC
+                let hostid = this.term_args.hostid
+                let hostinfo = this.term_args.hostinfo
+                let uname = this.term_args.uname
+                if (uname) hostinfo += (' - ' + uname);
+                let uid = this.term_args.uid
+                console.log(hostid, hostinfo);
+
+                if (uid) {
+                    var tabId = "web_vnc_"+hostid+"_"+uid;
+                    if ($("#"+tabId).length <= 0){
+                        $('.nav-tabs').append('<li><a href="#' + tabId + '">' + hostinfo + '<button class="close closeTab" type="button" >×</button></a></li>');
+                        $('.tab-content').append('<div class="tab-pane responsive" id="' +tabId + '"><iframe src="/guacamole/'+hostid+'/'+uid+'/" frameborder="0" style="width: 100%;" scrolling="no" onload="this.height=780;this.height=this.contentWindow.document.documentElement.scrollHeight;this.contentWindow.focus();" onmouseover="this.contentWindow.focus();"></iframe>'+ '</div>');
+                        showTab(tabId);
+                        registerCloseEvent();
+                        console.log("Rdp and vnc protocol can use left ctrl+shift+alt shortcut to use clipboard function!");
+                    }else {
+                        showTab(tabId);
+                    }
+
+                }
+
+            },
+
+            web_sftp() {
+                // 连接网页sftp
+                let hostid = this.term_args.hostid
+                let hostinfo = this.term_args.hostinfo
+                let uname = this.term_args.uname
+                if (uname) hostinfo += (' - ' + uname);
+                let uid = this.term_args.uid
+                console.log(hostid, hostinfo);
+
+                if (uid) {
+                    // hostinfo=hostinfo+' sftp';
+                    var tabId = "web_sftp_"+hostid+'_'+uid;
+                    if ($("#"+tabId).length <= 0){
+                        $('.nav-tabs').append('<li><a href="#' + tabId + '">' + hostinfo + '<button class="close closeTab" type="button" >×</button></a></li>');
+                        $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
+                        showTab(tabId);
+                        registerCloseEvent();
+
+                        $('#'+tabId).elfinder({
+                                resizable: true,
+                                height: '100%', //elFinder框高度
+                                url : '/elfinder/yawd-connector/sftp/'+hostid+'/'+uid+'/',
+                                lang: 'zh_CN',
+                                soundPath: "{% static 'plugins/elfinder/sounds' %}",
+                                baseUrl : "{% static 'plugins/elfinder/' %}",
+                                // commands : ['*'],
+                                commands : [
+                                 'archive', 'back', 'chmod', 'colwidth', 'copy', 'cut', 'download', 'duplicate', 'edit', 'extract',
+                                 'forward', 'fullscreen', 'getfile', 'help', 'home', 'info', 'mkdir', 'mkfile', 'netmount', 'netunmount',
+                                 'open', 'opendir', 'paste', 'places', 'quicklook', 'reload', 'rename', 'restore', 'rm',
+                                 'search', 'sort', 'up', 'upload', 'view', 'zipdl'
+                                ],
+                                //富文本编辑器
+                                commandsOptions: {
+                                    edit: {
+                                        editors : [
+                                            {
+                                                // ACE Editor
+                                                // `mimes` is not set for support everything kind of text file
+                                                load : function(textarea) {
+                                                    var self = this,
+                                                        dfrd = $.Deferred(),
+                                                        cdn  = "{% static 'plugins/elfinder/ace' %}",
+                                                        // cdn  = "//cdnjs.cloudflare.com/ajax/libs/ace/1.2.5",
+                                                        init = function() {
+                                                            console.log(cdn);
+                                                            if (typeof ace === 'undefined') {
+                                                                self.fm.loadScript([
+                                                                    cdn+'/ace.js',
+                                                                    cdn+'/ext-modelist.js',
+                                                                    cdn+'/ext-settings_menu.js',
+                                                                    cdn+'/ext-language_tools.js'
+                                                                ], start);
+                                                            } else {
+                                                                start();
+                                                            }
+                                                        },
+                                                        start = function() {
+                                                            var editor, editorBase, mode,
+                                                            ta = $(textarea),
+                                                            taBase = ta.parent(),
+                                                            dialog = taBase.parent(),
+                                                            id = textarea.id + '_ace',
+                                                            ext = self.file.name.replace(/^.+\.([^.]+)|(.+)$/, '$1$2').toLowerCase(),
+                                                            // MIME/mode map
+                                                            mimeMode = {
+                                                                'text/x-php'              : 'php',
+                                                                'application/x-php'       : 'php',
+                                                                'text/html'               : 'html',
+                                                                'application/xhtml+xml'   : 'html',
+                                                                'text/javascript'         : 'javascript',
+                                                                'application/javascript'  : 'javascript',
+                                                                'text/css'                : 'css',
+                                                                'text/x-c'                : 'c_cpp',
+                                                                'text/x-csrc'             : 'c_cpp',
+                                                                'text/x-chdr'             : 'c_cpp',
+                                                                'text/x-c++'              : 'c_cpp',
+                                                                'text/x-c++src'           : 'c_cpp',
+                                                                'text/x-c++hdr'           : 'c_cpp',
+                                                                'text/x-shellscript'      : 'sh',
+                                                                'application/x-csh'       : 'sh',
+                                                                'text/x-python'           : 'python',
+                                                                'text/x-java'             : 'java',
+                                                                'text/x-java-source'      : 'java',
+                                                                'text/x-ruby'             : 'ruby',
+                                                                'text/x-perl'             : 'perl',
+                                                                'application/x-perl'      : 'perl',
+                                                                'text/x-sql'              : 'sql',
+                                                                'text/xml'                : 'xml',
+                                                                'application/docbook+xml' : 'xml',
+                                                                'application/xml'         : 'xml'
+                                                            };
+                                                            
+                                                            // set basePath of ace
+                                                            ace.config.set('basePath', cdn);
+                                                            
+                                                            // set base height
+                                                            // console.log(taBase.height());
+                                                            taBase.height(600); //编辑框大小
+                                                            
+                                                            // detect mode
+                                                            mode = ace.require('ace/ext/modelist').getModeForPath('/' + self.file.name).name;
+                                                            if (mode === 'text') {
+                                                                if (mimeMode[self.file.mime]) {
+                                                                    mode = mimeMode[self.file.mime];
+                                                                }
+                                                            }
+
+                                                            // show MIME:mode in title bar
+                                                            taBase.prev().children('.elfinder-dialog-title').append(' (' + self.file.mime + ' : ' + mode.split(/[\/\\]/).pop() + ')');
+
+                                                            // TextArea button and Setting button
+                                                            $('<div class="ui-dialog-buttonset"/>').css('float', 'left')
+                                                            .append(
+                                                                $('<button>TextArea</button>')
+                                                                .button()
+                                                                .on('click', function(){
+                                                                    if (ta.data('ace')) {
+                                                                        ta.removeData('ace');
+                                                                        editorBase.hide();
+                                                                        ta.val(editor.session.getValue()).show().focus();
+                                                                        $(this).text('AceEditor');
+                                                                    } else {
+                                                                        ta.data('ace', true);
+                                                                        editorBase.show();
+                                                                        editor.setValue(ta.hide().val(), -1);
+                                                                        editor.focus();
+                                                                        $(this).text('TextArea');
+                                                                    }
+                                                                })
+                                                            )
+                                                            .append(
+                                                                $('<button>Ace editor setting</button>')
+                                                                .button({
+                                                                    icons: {
+                                                                        primary: 'ui-icon-gear',
+                                                                        secondary: 'ui-icon-triangle-1-e'
+                                                                    },
+                                                                    text: false
+                                                                })
+                                                                .on('click', function(){
+                                                                    editor.showSettingsMenu();
+                                                                })
+                                                            )
+                                                            .prependTo(taBase.next());
+
+                                                            // Base node of Ace editor
+                                                            editorBase = $('<div id="'+id+'" style="width:100%; height:100%;"/>').text(ta.val()).insertBefore(ta.hide());
+
+                                                            // Ace editor configure
+                                                            ta.data('ace', true);
+                                                            editor = ace.edit(id);
+                                                            ace.require('ace/ext/language_tools');
+                                                            ace.require('ace/ext/settings_menu').init(editor);
+                                                            editor.$blockScrolling = Infinity;
+                                                            editor.setOptions({
+                                                                theme: 'ace/theme/monokai',
+                                                                mode: 'ace/mode/' + mode,
+                                                                fontSize: '14px',
+                                                                wrap: true,
+                                                                enableBasicAutocompletion: true,
+                                                                enableSnippets: true,
+                                                                enableLiveAutocompletion: false
+                                                            });
+                                                            editor.commands.addCommand({
+                                                                name : "saveFile",
+                                                                bindKey: {
+                                                                    win : 'Ctrl-s',
+                                                                    mac : 'Command-s'
+                                                                },
+                                                                exec: function(editor) {
+                                                                    self.doSave();
+                                                                }
+                                                            });
+                                                            editor.commands.addCommand({
+                                                                name : "closeEditor",
+                                                                bindKey: {
+                                                                    win : 'Ctrl-w|Ctrl-q',
+                                                                    mac : 'Command-w|Command-q'
+                                                                },
+                                                                exec: function(editor) {
+                                                                    self.doCancel();
+                                                                }
+                                                            });
+                                                            
+                                                            editor.resize();
+                                                            
+                                                            dfrd.resolve(editor);
+                                                        };
+                                                    
+                                                    // init & start
+                                                    init();
+                                                    
+                                                    return dfrd;
+                                                },
+                                                close : function(textarea, instance) {
+                                                    if (instance) {
+                                                        instance.destroy();
+                                                        $(textarea).show();
+                                                    }
+                                                },
+                                                save : function(textarea, instance) {
+                                                    instance && $(textarea).data('ace') && (textarea.value = instance.session.getValue());
+                                                },
+                                                focus : function(textarea, instance) {
+                                                    instance && $(textarea).data('ace') && instance.focus();
+                                                },
+                                                resize : function(textarea, instance, e, data) {
+                                                    instance && instance.resize();
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+
+
+                        });
+
+                        // var ws = new WebSocket('ws://192.168.80.238:8088/sftp');
+                        // wss[hostid+'_sftp'] = ws;
+                        // ws.onopen = function (event) {
+                        //     ws.send(JSON.stringify(["hostid", hostid]));
+                        //     console.log(11111111111);
+                        // };
+
+
+                    }else {
+                        showTab(tabId);
+                    }
+                    // ws.send('123');
+
+
+                }
+
+            },
+
+
+
+
+
+
+
+
+        }
+    })
+
+</script>
+
+
+
+{% endblock footer-js %}
+
+
