@@ -26,12 +26,15 @@
         太慢的话, 可使用国内码云
         git clone https://gitee.com/py2010/dx
         cd dx
+        # 拉取镜像, 堡垒机108M, guacd(远程桌面/VNC服务端支持)143M
+        docker-compose pull
+        # 创建容器并运行
         docker-compose up
         等待自动部署完成, 当前目录-宿主机项目已挂载到容器/opt/dx, 方便修改/测试
+        如果挂载了宿主机目录, 则使用容器/opt/dx目录, 否则使用镜像自带项目/dx/
         访问http://ip:8066，用户名/密码：admin/admin2021
 
         # 如果未安装docker-compose, 也可直接使用docker命令, 就是不能智能挂载目录,
-        # pull拉取, 镜像大小108MB
         docker pull py2010/dx
         docker run -it --network host -v /宿主机路径/dx:/opt/dx host py2010/dx
         # 如果不挂载宿主机项目/opt/dx/, 则自动使用镜像中的目录/dx/

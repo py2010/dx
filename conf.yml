@@ -9,7 +9,7 @@ log_level: DEBUG
 
 redis:
   host: 127.0.0.1
-  port: 6379
+  port: 6377
   password: 2017
   db: 0
 

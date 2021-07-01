@@ -16,8 +16,8 @@ elif [ -x ${DX_DIR}/docker-entrypoint.sh ]; then
 fi
 
 
-# 启动REDIS
-nohup redis-server /etc/redis.conf >& logs/redis.log &
+# 启动REDIS, 为防止host网络模式下与宿主机redis端口冲突, 使用6377
+redis-server /etc/redis.conf --port 6377 &
 sleep 1
 
 # 启动Django网站

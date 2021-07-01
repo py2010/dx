@@ -50,15 +50,17 @@ class MyDict(dict):
 
     def _deep_update_(self, d={}):
         '''
-        (dict.update不支持"深拷贝"), 用于实现深层更新(递归update)
+        (dict.update不支持"深拷贝"), 用于实现深层更新(递归更新多层字典)
         主要用于含默认配置且为多层字典时,
         default_dict._deep_update_(conf_dict)
         '''
         for k, v in d.items():
             if isinstance(v, dict):
-                if k in self:
+                try:
                     getattr(self, k)._deep_update_(v)
                     continue
+                except AttributeError:
+                    pass
             self[k] = v
 
     def copy(self):
@@ -69,16 +71,18 @@ class MyDict(dict):
 
 class Conf(MyDict):
     SETATTR = True  # 是否开启.赋值
+    NOERROR = True  # 配置项不存在时, True表示不报错
 
     def __getattr__(self, attr):
         '''
-        配置键值不存在时, 不报错, 返回None
-        如果需外部捕获(KeyError, AttributeError)错误, 自行修改
+        NOERROR = True, 配置键值不存在时, 不报错, 返回None
         '''
         try:
             return super(self.__class__, self).__getattr__(attr)
-        except (KeyError, AttributeError):
-            return  # 不存在的键返回None值
+        except (KeyError, AttributeError) as e:
+            if self.NOERROR:
+                return  # 不存在的键返回None值
+            raise e
 
     def __setattr__(self, attr, val):
         if attr != 'SETATTR' and self.SETATTR:
@@ -95,7 +99,7 @@ class File(object):
     '''
     _default_conf_file_ = ''
 
-    def __new__(cls, conf_file='', default={}, set_attr=False, *args, **kwargs):
+    def __new__(cls, conf_file='', default={}, set_attr=False, no_error=True, *args, **kwargs):
 
         conf_file = cls._check_(conf_file)
         data = cls._python_(conf_file)
@@ -104,6 +108,7 @@ class File(object):
         conf = Conf(default, *args, **kwargs)  # 加载默认配置
         conf._deep_update_(data)  # 递归深拷贝更新配置
         conf.SETATTR = set_attr
+        conf.NOERROR = no_error
         return conf
 
     @classmethod

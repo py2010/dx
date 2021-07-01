@@ -29,6 +29,7 @@ Out[4]: '/static/'
 
 '''
 
+# c/d s  # 进入django shell
 
 # from config import confile
 # yml = confile.YML('docker-compose.yml')  # ***/project/docker-compose.yml
